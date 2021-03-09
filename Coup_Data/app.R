@@ -1,7 +1,9 @@
 library(shiny)
-library(tidycensus)
+library(primer.data)
 library(tidyverse)
+library(ggplot2)
 library(shinythemes)
+library(ggplot2)
 source("Plots.R")
 
 # Define UI for application 
@@ -27,11 +29,16 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                 but I am excited about using two different types of data sets that will provide a meta and micro 
                 level study of a region I am deeply interested in.")),
                  tabPanel("Visualing the Data", 
-                          titlePanel("1st Plot"),
-                          h3("Project Background and Motivations"),
-                          p("Hello, this is a shiny app that I have created for milestone #3 of my big data course"),
-                          p("My name is Nana-Korantema Koranteng and I study the Middle East.")),
-                        mainPanel(plotOutput("plots")),
+                          fluidPage(theme = shinytheme("cyborg"),
+                                    titlePanel(" Top 10 successful Coups"),
+                                    sidebarLayout(
+                                        sidebarPanel(
+                                            selectInput(
+                                                "plot_type",
+                                                "Plot Type",
+                                                c("Top 10" = "a")
+                                            )),
+                                    mainPanel(plotOutput("plots"))))),
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),
@@ -44,11 +51,10 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
 
 server <- function(input, output) {
     
-    output$plot <- renderPlot({
+    output$plots <- renderPlot({
         if(input$plot_type == "a"){            
             plot_1
         }                                        
-        
     })
 }
 # Run the application 

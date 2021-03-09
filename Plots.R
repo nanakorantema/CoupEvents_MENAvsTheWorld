@@ -1,3 +1,10 @@
+library(shiny)
+library(primer.data)
+library(tidyverse)
+library(ggplot2)
+library(shinythemes)
+library(ggplot2)
+
 plot_1 <- top_10_coups %>% 
   ggplot(aes(x = fct_reorder(country, total_coup),
              y = total_coup)) +
