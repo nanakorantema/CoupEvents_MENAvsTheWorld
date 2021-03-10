@@ -26,7 +26,7 @@ top_10_coups %>%
   ggplot(aes(x = fct_reorder(country, total_coup),
              y = total_coup)) +
   labs(title = "Top 10 Countries with the Most Successful Coups from 1945- 2019",
-       subtitle = "South and Central American countires have had the most successful coups",
+       subtitle = "South and Central American countries have had the most successful coups",
        caption = "Source: Cline Center Coup D’état Project Dataset",
        x = "Country",
        y = "Number of Successful Coups") +
@@ -37,5 +37,25 @@ top_10_coups %>%
 ```
 ```{r}
 
+
+attempted_coups <-coup_data %>% 
+                    group_by(country) %>% 
+                    filter(attempt == 1) %>% 
+                    select(country, attempt) %>% 
+                    summarise(failed_attempts = sum(attempt)) %>% 
+                    arrange(desc(failed_attempts)) %>% 
+                    slice(1:10) 
+
+attempted_coups %>% 
+  ggplot(aes(x = fct_reorder(country, failed_attempts),
+             y = failed_attempts)) +
+  labs(title = "Top 10 Countries with the Most Unsuccessful Coups from 1945- 2019",
+       subtitle = "Coups fail all over the world",
+       caption = "Source: Cline Center Coup D’état Project Dataset",
+       x = "Country",
+       y = "Number of Unsuccessful Coups") +
+  coord_flip() +
+  theme_minimal() +
+  geom_col(fill = "darkolivegreen4")
 ```
 

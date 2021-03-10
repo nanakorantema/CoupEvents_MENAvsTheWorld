@@ -29,16 +29,17 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                 but I am excited about using two different types of data sets that will provide a meta and micro 
                 level study of a region I am deeply interested in.")),
                  tabPanel("Visualing the Data", 
-                          fluidPage(theme = shinytheme("cyborg"),
-                                    titlePanel(" Top 10 successful Coups"),
-                                    sidebarLayout(
-                                        sidebarPanel(
-                                            selectInput(
+                          fluidPage(
+                              titlePanel(" Top 10 successful Coups"),
+                              sidebarLayout(
+                                    sidebarPanel(
+                                        selectInput(
                                                 "plot_type",
                                                 "Plot Type",
-                                                c("Top 10" = "a")
+                                                c("Top 10 Successful" = "a", "Top 10 Unsuccessful" = "b")
                                             )),
-                                    mainPanel(plotOutput("plots"))))),
+                                    mainPanel(plotOutput("plots")))
+                          )),
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),
@@ -46,16 +47,23 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                           h3("About Me"),
                           p("My name is Nana-Korantema Koranteng and I study the Middle East. 
                             You can reach me at nanakorantema_koranteng@g.harvard.edu.")))
+)
 
 # Define server logic required to draw a histogram
 
 server <- function(input, output) {
     
     output$plots <- renderPlot({
+        
         if(input$plot_type == "a"){            
             plot_1
         }                                        
+        else if(input$plot_type == "b"){
+            plot_2
+        }
     })
 }
+
+
 # Run the application 
 shinyApp(ui = ui, server = server)
