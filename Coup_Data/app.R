@@ -43,7 +43,7 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),
-                          p("Hello, this is a shiny app that I have created for milestone #3 of my big data course"),
+                          p("Hello, this is a shiny app that I have created for milestone #4 of my big data course"),
                           h3("About Me"),
                           p("My name is Nana-Korantema Koranteng and I study the Middle East. 
                             You can reach me at nanakorantema_koranteng@g.harvard.edu.")))
