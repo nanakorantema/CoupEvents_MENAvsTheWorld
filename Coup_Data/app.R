@@ -7,7 +7,7 @@ library(ggplot2)
 source("~/Desktop/Gov_1005/Final_Project/Plots.R")
 
 # Define UI for application 
-ui <- navbarPage(theme = shinytheme("cyborg"),
+ui <- navbarPage(theme = shinytheme("lumen"),
                  "Coups and Democracy in the Middle East",
                  tabPanel("Discussion",
                           titlePanel("Project Data"),
@@ -20,6 +20,7 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                 Arab Spring has served as a catalyst for civil resistance and political reform in the Middle
                 East, I am hoping to use this data to compare coup attempts in the region and the 
                 rest of the world. 
+        
                 Next, I plan to use an Arab barometer data set entitled Democracy in the Middle East 
                 and North Africa: Five Years after the Arab Uprisings which explores opinions towards
                 democracy in selected MENA countries. Essentially, I hope to look for some type of relationship
@@ -30,13 +31,13 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                 level study of a region I am deeply interested in.")),
                  tabPanel("Visualing the Data", 
                           fluidPage(
-                              titlePanel(" Top 10 successful Coups"),
+                              titlePanel("Preliminary Coup Data"),
                               sidebarLayout(
                                     sidebarPanel(
                                         selectInput(
                                                 "plot_type",
                                                 "Plot Type",
-                                                c("Top 10 Successful" = "a", "Top 10 Unsuccessful" = "b")
+                                                c("Top 10 Successful" = "a", "Top 10 Unsuccessful" = "b"),
                                             )),
                                     mainPanel(plotOutput("plots")))
                           )),
