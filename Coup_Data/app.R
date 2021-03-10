@@ -4,7 +4,7 @@ library(tidyverse)
 library(ggplot2)
 library(shinythemes)
 library(ggplot2)
-source("Plots.R")
+source("~/Desktop/Gov_1005/Final_Project/Plots.R")
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("cyborg"),
@@ -47,7 +47,7 @@ ui <- navbarPage(theme = shinytheme("cyborg"),
                           h3("About Me"),
                           p("My name is Nana-Korantema Koranteng and I study the Middle East. 
                             You can reach me at nanakorantema_koranteng@g.harvard.edu.")))
-)
+
 
 # Define server logic required to draw a histogram
 
