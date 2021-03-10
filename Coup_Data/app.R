@@ -4,7 +4,7 @@ library(tidyverse)
 library(ggplot2)
 library(shinythemes)
 library(ggplot2)
-source("~/Desktop/Gov_1005/Final_Project/Plots.R")
+source("Plots.R")
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),

@@ -13,7 +13,7 @@ library(ggplot2)
 ```
 
 ```{r}
-coup_data <- read_csv(file = "/Users/Nansi/Desktop/Gov_1005/Final_Project/Coup_Data_v2.0.0.csv")
+coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 glimpse(coup_data)
 
 top_10_coups <- coup_data %>% 

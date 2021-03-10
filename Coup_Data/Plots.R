@@ -5,6 +5,16 @@ library(ggplot2)
 library(shinythemes)
 library(ggplot2)
 
+coup_data <- read_csv(file = "Coup_Data_v2.0.0.csv")
+
+top_10_coups <- coup_data %>% 
+  group_by(country) %>% 
+  filter(event_type == "coup") %>% 
+  select(country, event_type, realized) %>% 
+  summarise(total_coup = sum(realized)) %>% 
+  arrange(desc(total_coup)) %>% 
+  slice(1:10) 
+
 plot_1 <- top_10_coups %>% 
   ggplot(aes(x = fct_reorder(country, total_coup),
              y = total_coup)) +
@@ -16,6 +26,14 @@ plot_1 <- top_10_coups %>%
   coord_flip() +
   theme_minimal() +
   geom_col(fill = "darkolivegreen4")
+
+attempted_coups <-coup_data %>% 
+  group_by(country) %>% 
+  filter(attempt == 1) %>% 
+  select(country, attempt) %>% 
+  summarise(failed_attempts = sum(attempt)) %>% 
+  arrange(desc(failed_attempts)) %>% 
+  slice(1:10) 
 
 plot_2 <- attempted_coups %>% 
   ggplot(aes(x = fct_reorder(country, failed_attempts),
