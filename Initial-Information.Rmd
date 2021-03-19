@@ -8,14 +8,39 @@ knitr::opts_chunk$set(echo = TRUE)
 library(primer.data)
 library(tidyverse)
 library(ggplot2)
-
+library(janitor)
+library(rworldmap)
 
 ```
 
-```{r}
+```{r intial data entryy} 
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 glimpse(coup_data)
+```
 
+  ## Key Questions:
+  
+  Where are the most Coups? Where have they been most successful, least successful? Is there a type of coup that is particularly popular? Where? Are the countries that have popular revolts less likely to have coups in the future? (creating a predictive model?)
+  
+  Zooming in on the Middle East--> certain period especially unstable? Types of coups & how quickly they succeeded each other
+
+```{r cleaning}
+
+#unrealized = conspiracies and attempts
+#realized = coup
+#types of coups = Military, dissident, rebel, palace, Foreign-backed, Auto, popular revolt, forced resignations
+
+
+
+Clean_coup <- coup_data %>% 
+  select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
+  group_by(year) %>% 
+  arrange(desc(year))
+
+```
+
+
+```{r creating_initial objects}
 top_10_coups <- coup_data %>% 
   group_by(country) %>% 
   filter(event_type == "coup") %>% 
@@ -37,7 +62,7 @@ top_10_coups %>%
   geom_col(fill = "darkolivegreen4")
   
 ```
-```{r}
+```{r manipulating_data}
 
 
 attempted_coups <-coup_data %>% 
@@ -59,5 +84,58 @@ attempted_coups %>%
   coord_flip() +
   theme_minimal() +
   geom_col(fill = "darkolivegreen4")
+```
+
+```{r mapping_coup}
+
+# maps for event types 
+grouped_coup <- Clean_coup %>% 
+  group_by(country, event_type) %>% 
+  summarise(Coups = n()) %>% 
+  filter(event_type == "coup")
+
+
+joined_data <-joinCountryData2Map(grouped_coup,
+                                 joinCode = "NAME",
+                                 nameJoinColumn = "country")
+
+thecoupMap <- mapCountryData( joined_data, nameColumnToPlot="Coups", addLegend=TRUE )
+do.call( addMapLegend, c(theMap, legendWidth=1, legendMar = 2))
+
+```
+```{r mapping_attempts}
+
+grouped_attempted <- Clean_coup %>% 
+  group_by(country, event_type) %>% 
+  summarise(Attempts = n()) %>% 
+  filter(event_type == "attempted")
+
+
+joined_data <-joinCountryData2Map(grouped_attempted,
+                                 joinCode = "NAME",
+                                 nameJoinColumn = "country")
+
+theattemptedMap <- mapCountryData( joined_data, nameColumnToPlot="Attempts", addLegend=TRUE )
+do.call( addMapLegend, c(theMap, legendWidth=1, legendMar = 2))
+
+
+```
+
+```{r conspiracy map}
+
+grouped_conspiracy <- Clean_coup %>% 
+  group_by(country, event_type) %>% 
+  summarise(Conspiracies = n()) %>% 
+  filter(event_type == "conspiracy")
+
+
+joined_data <-joinCountryData2Map(grouped_conspiracy,
+                                 joinCode = "NAME",
+                                 nameJoinColumn = "country")
+
+theconspiracyMap <- mapCountryData( joined_data, nameColumnToPlot="Conspiracies",     addLegend=TRUE )
+
+do.call( addMapLegend, c(theMap, legendWidth=1, legendMar = 2))
+
 ```
 
