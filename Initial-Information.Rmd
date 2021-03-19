@@ -100,7 +100,7 @@ joined_data <-joinCountryData2Map(grouped_coup,
                                  nameJoinColumn = "country")
 
 thecoupMap <- mapCountryData( joined_data, nameColumnToPlot="Coups", addLegend=TRUE )
-do.call( addMapLegend, c(theMap, legendWidth=1, legendMar = 2))
+
 
 ```
 ```{r mapping_attempts}
@@ -116,7 +116,7 @@ joined_data <-joinCountryData2Map(grouped_attempted,
                                  nameJoinColumn = "country")
 
 theattemptedMap <- mapCountryData( joined_data, nameColumnToPlot="Attempts", addLegend=TRUE )
-do.call( addMapLegend, c(theMap, legendWidth=1, legendMar = 2))
+
 
 
 ```
@@ -135,7 +135,6 @@ joined_data <-joinCountryData2Map(grouped_conspiracy,
 
 theconspiracyMap <- mapCountryData( joined_data, nameColumnToPlot="Conspiracies",     addLegend=TRUE )
 
-do.call( addMapLegend, c(theMap, legendWidth=1, legendMar = 2))
 
 ```
 

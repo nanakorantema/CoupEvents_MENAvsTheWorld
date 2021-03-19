@@ -29,7 +29,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                 The direction of my project might change (and probably will as I take a closer look at the data)
                 but I am excited about using two different types of data sets that will provide a meta and micro 
                 level study of a region I am deeply interested in.")),
-                 tabPanel("Visualing the Data", 
+                 tabPanel("Graphs", 
                           fluidPage(
                               titlePanel("Preliminary Coup Data"),
                               sidebarLayout(
@@ -41,6 +41,26 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                             )),
                                     mainPanel(plotOutput("plots")))
                           )),
+                 tabPanel("Maps",
+                          fluidPage(
+                                    titlePanel("Mapping Event Types"),
+                                    h3("Understanding the Event Types"),
+                                    p("Coups are a definitive event in the history of a nation-state. In this data set, it is best to understand
+                                    the included events as being part of two key categories: realized and unrealized. Coups are the only 
+                                    events that are realized (ie. succesful), meaning that it results in the incumbent's loss of power. Unrealized events 
+                                    include conspiracies and attempted coups which do not remove the targeted incumbent. A conspiracy is defined as a plot 
+                                    to execute a coup that is discovered and thwarted before it can be initiated. An attempted coup is an event when a coup plan
+                                    is initiated but fails to achieve its goal.
+                                      
+                                    This page includes density maps that show how common each of these event types are all over the world."),
+                                    sidebarLayout(
+                                        sidebarPanel(
+                                            selectInput(
+                                                "plot_type",
+                                                "Plot Type",
+                                                c("Coups" = "a", "Attempted Coups" = "b", "Coup Conspiracies" = "c")
+                                            )),
+                                        mainPanel(plotOutput("map"))))),
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),
@@ -50,7 +70,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             You can reach me at nanakorantema_koranteng@g.harvard.edu.")))
 
 
-# Define server logic required to draw a histogram
+
 
 server <- function(input, output) {
     
@@ -61,6 +81,18 @@ server <- function(input, output) {
         }                                        
         else if(input$plot_type == "b"){
             plot_2
+        }
+    })
+    
+    output$map <- renderPlot({
+        if(input$plot_type == "a"){            
+            thecoupMap
+        }                                        
+        else if(input$plot_type == "b"){
+            theattemptedMap
+        }
+        else if(input$plot_type == "c"){
+            theconspiracyMap
         }
     })
 }
