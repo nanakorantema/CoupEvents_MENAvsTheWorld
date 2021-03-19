@@ -1,0 +1,12 @@
+name: milestone_5
+title: milestone_5
+username:
+account: nanakkoranteng
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3823340
+bundleId: 4370504
+url: https://nanakkoranteng.shinyapps.io/milestone_5/
+when: 1616194833.63959
+asMultiple: FALSE
+asStatic: FALSE
