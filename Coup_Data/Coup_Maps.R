@@ -20,8 +20,11 @@ joined_data <-joinCountryData2Map(grouped_coup,
                                   joinCode = "NAME",
                                   nameJoinColumn = "country")
 
-thecoupMap <- mapCountryData( joined_data, nameColumnToPlot="Coups", addLegend=TRUE )
-
+thecoupMap <- mapCountryData( joined_data, nameColumnToPlot="Coups",
+                              missingCountryCol='dark grey',
+                              oceanCol="light blue",
+                              addLegend=TRUE )
+mtext("[Grey Color: No Data Available]",side=1,line=-1)
 
 
 grouped_attempted <- Clean_coup %>% 
@@ -34,8 +37,11 @@ joined_data <-joinCountryData2Map(grouped_attempted,
                                   joinCode = "NAME",
                                   nameJoinColumn = "country")
 
-theattemptedMap <- mapCountryData( joined_data, nameColumnToPlot="Attempts", addLegend=TRUE )
-
+theattemptedMap <- mapCountryData( joined_data, nameColumnToPlot="Attempts",
+                                   missingCountryCol='dark grey',
+                                   oceanCol="light blue",
+                                   addLegend=TRUE )
+mtext("[Grey Color: No Data Available]",side=1,line=-1)
 
 
 grouped_conspiracy <- Clean_coup %>% 
@@ -48,7 +54,9 @@ joined_data <-joinCountryData2Map(grouped_conspiracy,
                                   joinCode = "NAME",
                                   nameJoinColumn = "country")
 
-theconspiracyMap <- mapCountryData( joined_data, nameColumnToPlot="Conspiracies", addLegend=TRUE )
-
-
-
+theconspiracyMap <- mapCountryData( joined_data, 
+                                    nameColumnToPlot="Conspiracies",
+                                    missingCountryCol='dark grey',
+                                    oceanCol="light blue",
+                                    addLegend=TRUE )
+mtext("[Grey Color: No Data Available]",side=1,line=-1)

@@ -7,6 +7,7 @@ library(ggplot2)
 library(janitor)
 library(rworldmap)
 source("Plots.R")
+source("Coup_Maps.R")
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),
@@ -54,18 +55,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                     to execute a coup that is discovered and thwarted before it can be initiated. An attempted coup is an event when a coup plan
                                     is initiated but fails to achieve its goal.
                                       
-                                    This page includes density maps that show how common each of these event types are all over the world.
-                                      
-                                      ** NB - While I have created maps for all event types I am still trouble shooting my shiny app so that all three appear in a dropdown menu"),
-                                    sidebarLayout(
-                                        sidebarPanel(
-                                            selectInput(
-                                                "plot_type",
-                                                "Plot Type",
-                                                c("Coups" = "a", "Attempted Coups" = "b")
-                                            )),
-                                        mainPanel(plotOutput("map", height="560px", width="950px")))
-                                    )),
+                                    This page includes density maps that show how common each of these event types are all over the world."),
+                                
+                                         ),
+                                        mainPanel(plotOutput("map1", height="560px", width="950px"),
+                                                  plotOutput("map2", height="560px", width="950px"),
+                                                  plotOutput("map3", height="560px", width="950px"))),
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),
@@ -89,9 +84,8 @@ server <- function(input, output) {
         }
     })
     
-    output$map <- renderPlot({
+    output$map1 <- renderPlot({
         
-        if(input$plot_type == "a"){   
             
             Clean_coup <- coup_data %>% 
                 select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
@@ -114,18 +108,61 @@ server <- function(input, output) {
                                           oceanCol="light blue",
                                           addLegend=TRUE )
             mtext("[Grey Color: No Data Available]",side=1,line=-1)
-        } 
+    })
         
-        else if(input$plot_type == "b"){
         
+    output$map2 <- renderPlot({   
+        
+      
+           
+           Clean_coup <- coup_data %>% 
+               select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
+               group_by(year) %>% 
+               arrange(desc(year))
+        
+            grouped_attempted <- Clean_coup %>% 
+                group_by(country, event_type) %>% 
+                summarise(Attempts = n()) %>% 
+                filter(event_type == "attempted")
             
+            
+            joined_data <-joinCountryData2Map(grouped_attempted,
+                                              joinCode = "NAME",
+                                              nameJoinColumn = "country")
             
             theattemptedMap <- mapPolys(joined_data, nameColumnToPlot="Attempts",
                                                missingCountryCol='dark grey',
                                                oceanCol="light blue",
                                                addLegend=TRUE )
             mtext("[Grey Color: No Data Available]",side=1,line=-1)  
-        }
+        
+        
+    })
+    
+    output$map3 <- renderPlot({
+    
+            
+            Clean_coup <- coup_data %>% 
+                select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
+                group_by(year) %>% 
+                arrange(desc(year))
+            
+            grouped_conspiracy <- Clean_coup %>% 
+                group_by(country, event_type) %>% 
+                summarise(Conspiracies = n()) %>% 
+                filter(event_type == "conspiracy")
+            
+            
+            joined_data <-joinCountryData2Map(grouped_conspiracy,
+                                              joinCode = "NAME",
+                                              nameJoinColumn = "country")
+            
+            theconspiracyMap <- mapCountryData( joined_data, 
+                                                nameColumnToPlot="Conspiracies",
+                                                missingCountryCol='dark grey',
+                                                oceanCol="light blue",
+                                                addLegend=TRUE )
+            mtext("[Grey Color: No Data Available]",side=1,line=-1)
         
     })
 }
