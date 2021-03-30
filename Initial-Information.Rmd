@@ -147,4 +147,11 @@ theconspiracyMap <- mapCountryData( joined_data,
 
 
 ```
+```{r}
+#creating an interactive statistical model  - parameters (location, prior coup history (successful/unsuccessful) or incorporate all of the info? (conspiracy, attempted, coup), coup typology )
+
+#inputs= country, type of coup -> output unsuccessful, successful
+
+#interactive map- discuss next week? 
+```
 
