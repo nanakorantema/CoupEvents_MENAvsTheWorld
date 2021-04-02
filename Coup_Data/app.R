@@ -6,6 +6,9 @@ library(shinythemes)
 library(ggplot2)
 library(janitor)
 library(rworldmap)
+library(highcharter)
+library(dplyr)
+library(maps)
 source("Plots.R")
 source("Coup_Maps.R")
 
@@ -55,16 +58,26 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                     to execute a coup that is discovered and thwarted before it can be initiated. An attempted coup is an event when a coup plan
                                     is initiated but fails to achieve its goal.
                                       
-                                    This page includes density maps that show how common each of these event types are all over the world."),
+                                    This page includes density maps that show how common each of these event types are all over the world.
+                                      
+                                      I am also trying to create a highcharter map but cannot integrate it into my shinyapp just yet."
+                                  ),
                                 
                                          ),
                                         mainPanel(plotOutput("map1", height="560px", width="950px"),
+                                                  #highchartOutput("map_1",height = '500px'),
                                                   plotOutput("map2", height="560px", width="950px"),
                                                   plotOutput("map3", height="560px", width="950px"))),
+                 tabPanel("Coup Predictor", 
+                          titlePanel("Coup Predictor"),
+                          h3("Plan for this page"),
+                          p("As the last component of my project I hope to create a predictive model for the coup data based on parameters
+                            in the set. I would like users to be able to select a country and type of coup ( Military, dissident, rebel, palace,
+                            Foreign-backed, Auto, popular revolt, forced resignations). I think I would need to use posterior_epred ")),
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),
-                          p("Hello, this is a shiny app that I have created for milestone #4 of my big data course"),
+                          p("Hello, this is a shiny app that I have created for milestone # of my big data course"),
                           h3("About Me"),
                           p("My name is Nana-Korantema Koranteng and I study the Middle East. 
                             You can reach me at nanakorantema_koranteng@g.harvard.edu.")))
@@ -109,7 +122,26 @@ server <- function(input, output) {
                                           addLegend=TRUE )
             mtext("[Grey Color: No Data Available]",side=1,line=-1)
     })
-        
+  
+    #output$map_1 <- renderhighcharter(
+      
+      
+        #map_1 <- hcmap(
+       # map = "custom/world-highres3", # high resolution world map
+        #data = map_info, # name of dataset
+        #joinBy = c("iso-a3"),
+        #name = "coups",
+        #value = "n",
+        #showInLegend = TRUE, # hide legend
+        #nullColor = "#DADADA",
+       # download_map_data = TRUE,
+        #dataLabels = list(enabled = TRUE, format = "{point.country}",
+                          #tooltip = list(
+                            #valueDecimals = 2)))%>% 
+        #hc_mapNavigation(enabled = FALSE) %>%
+        #hc_legend("none") %>%
+        #hc_title(text = "Coup Map from 1949 - 2019")
+    
         
     output$map2 <- renderPlot({   
         

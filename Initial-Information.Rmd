@@ -15,7 +15,42 @@ library(rworldmap)
 
 ```{r intial data entryy} 
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
-glimpse(coup_data)
+
+spec_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
+
+
+  cols(
+  coup_id = col_character(),
+  cowcode = col_double(),
+  country = col_character(),
+  year = col_double(),
+  month = col_character(),
+  day = col_character(),
+  event_type = col_character(),
+  unrealized = col_double(),
+  realized = col_double(),
+  conspiracy = col_double(),
+  attempt = col_double(),
+  military = col_double(),
+  dissident = col_double(),
+  rebel = col_double(),
+  palace = col_double(),
+  foreign = col_double(),
+  auto = col_double(),
+  resign = col_double(),
+  popular = col_double(),
+  counter = col_double(),
+  other = col_double(),
+  noharm = col_double(),
+  injured = col_double(),
+  killed = col_double(),
+  harrest = col_double(),
+  jailed = col_double(),
+  tried = col_double(),
+  fled = col_double(),
+  exile = col_double()
+)
+
 ```
 
   ## Key Questions:
@@ -60,8 +95,27 @@ top_10_coups %>%
   coord_flip() +
   theme_minimal() +
   geom_col(fill = "darkolivegreen4")
+
+
+
+urb_anim = tm_shape(world) + tm_polygons() + 
+  tm_shape(urban_agglomerations) + tm_dots(size = "population_millions") +
+  tm_facets(along = "year", free.coords = FALSE)
   
 ```
+
+```{r realized_coup_mapping}
+
+ realized_coup <- Clean_coup %>% 
+                    group_by(country) %>% 
+                    filter(event_type == "coup") %>% 
+                    select(country, event_type, realized) %>% 
+                    summarise(total_coup = sum(realized)) %>% 
+                    arrange(desc(total_coup))
+
+```
+
+
 ```{r manipulating_data}
 
 

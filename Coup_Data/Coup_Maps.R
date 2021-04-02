@@ -2,6 +2,10 @@ library(janitor)
 library(rworldmap)
 library(tidyverse)
 
+library(shiny)    # for shiny apps
+library(leaflet)  # renderLeaflet function
+library(spData)  
+
 coup_data <- read_csv(file = "Coup_Data_v2.0.0.csv")
 
 Clean_coup <- coup_data %>% 
@@ -60,3 +64,7 @@ theconspiracyMap <- mapCountryData( joined_data,
                                     oceanCol="light blue",
                                     addLegend=TRUE )
 mtext("[Grey Color: No Data Available]",side=1,line=-1)
+
+
+
+
