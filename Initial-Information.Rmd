@@ -10,7 +10,7 @@ library(tidyverse)
 library(ggplot2)
 library(janitor)
 library(rworldmap)
-
+library(rstanarm)
 ```
 
 ```{r intial data entryy} 
@@ -68,7 +68,7 @@ spec_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
 
 Clean_coup <- coup_data %>% 
-  select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
+  select( - c(unrealized, conspiracy, attempt, coup_id)) %>% 
   group_by(year) %>% 
   arrange(desc(year))
 
@@ -96,11 +96,6 @@ top_10_coups %>%
   theme_minimal() +
   geom_col(fill = "darkolivegreen4")
 
-
-
-urb_anim = tm_shape(world) + tm_polygons() + 
-  tm_shape(urban_agglomerations) + tm_dots(size = "population_millions") +
-  tm_facets(along = "year", free.coords = FALSE)
   
 ```
 
@@ -207,5 +202,51 @@ theconspiracyMap <- mapCountryData( joined_data,
 #inputs= country, type of coup -> output unsuccessful, successful
 
 #interactive map- discuss next week? 
+```
+
+
+```{r}
+fit_event_type <-   stan_glm(formula = realized ~ event_type,
+                         data = Clean_coup,
+                         family = "binomial",
+                         refresh = 0)
+
+fit_2 <- stan_glm(formula = realized ~ event_type + popular + dissident + foreign,
+                         data = Clean_coup,
+                         family = "binomial",
+                         refresh = 0)
+
+print(fit_event_type)
+print(fit_2)
+```
+
+```{r}
+newobs <- (tibble(event_type = c("coup", "attempted", "conspiracy")))
+
+pe_eventype <- posterior_epred(fit_event_type, 
+                 newdata = newobs) %>% 
+                 as_tibble() %>% 
+                 rename(Attempted = `1`) %>% 
+                 rename(Conspiracy = `2`) %>% 
+                 rename(Coup = `3`) %>% 
+                 pivot_longer(cols = c(Attempted, Conspiracy, Coup),
+                              names_to =  "event_type",
+                              values_to = "success") 
+
+pe_eventype %>% 
+  ggplot(aes(x = success, fill = event_type)) +
+    geom_histogram(aes(y = after_stat(count/sum(count))),
+                   alpha = 0.5, 
+                   bins = 50, 
+                   position = "identity") +
+     labs(title = "Posterior for Coup Success",
+         subtitle = "which is most likely to be successful?",
+         caption = "From Coup Data Set",
+         x = "Event Type",
+         y = "Probability") + 
+    scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    theme_classic()
+
 ```
 
