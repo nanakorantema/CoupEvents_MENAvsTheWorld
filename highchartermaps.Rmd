@@ -15,7 +15,7 @@ library(janitor)
 ```
 
 ```{r}
-coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
+coup_data <- read_csv(file = "Coup_Data_v2.0.0.csv")
 
 Clean_coup <- coup_data %>% 
   select( - c( unrealized, conspiracy, attempt, coup_id)) %>% 
@@ -70,7 +70,7 @@ map_1 <- hcmap(
 
 
           
-
+map_1
 
 ```
 

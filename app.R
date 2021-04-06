@@ -65,7 +65,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 
                                          ),
                                         mainPanel(plotOutput("map1", height="560px", width="950px"),
-                                                  #highchartOutput("map_1",height = '500px'),
+                                                  highchartOutput("map_1",height = '500px'),
                                                   plotOutput("map2", height="560px", width="950px"),
                                                   plotOutput("map3", height="560px", width="950px"))),
                  tabPanel("Coup Predictor", 
@@ -123,25 +123,25 @@ server <- function(input, output) {
             mtext("[Grey Color: No Data Available]",side=1,line=-1)
     })
   
-    #output$map_1 <- renderhighcharter(
+    output$map_1 <- renderHighchart(
       
       
-        #map_1 <- hcmap(
-       # map = "custom/world-highres3", # high resolution world map
-        #data = map_info, # name of dataset
-        #joinBy = c("iso-a3"),
-        #name = "coups",
-        #value = "n",
-        #showInLegend = TRUE, # hide legend
-        #nullColor = "#DADADA",
-       # download_map_data = TRUE,
-        #dataLabels = list(enabled = TRUE, format = "{point.country}",
-                          #tooltip = list(
-                            #valueDecimals = 2)))%>% 
-        #hc_mapNavigation(enabled = FALSE) %>%
-        #hc_legend("none") %>%
-        #hc_title(text = "Coup Map from 1949 - 2019")
-    
+        map_1 <- hcmap(
+       map = "custom/world-highres3", # high resolution world map
+       data = map_info, # name of dataset
+       joinBy = c("iso-a3"),
+       name = "coups",
+       value = "n",
+       showInLegend = TRUE, # hide legend
+       nullColor = "#DADADA",
+       download_map_data = TRUE,
+       dataLabels = list(enabled = TRUE, format = "{point.country}",
+       tooltip = list(
+       valueDecimals = 2)))%>%
+       hc_mapNavigation(enabled = FALSE) %>%
+       hc_legend("none") %>%
+       hc_title(text = "Coup Map from 1949 - 2019"))
+
         
     output$map2 <- renderPlot({   
         
