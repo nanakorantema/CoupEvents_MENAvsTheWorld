@@ -211,7 +211,7 @@ fit_event_type <-   stan_glm(formula = realized ~ event_type,
                          family = "binomial",
                          refresh = 0)
 
-fit_2 <- stan_glm(formula = realized ~ event_type + popular + dissident + foreign + military + rebel + palace + auto,
+fit_2 <- stan_glm(formula = realized ~  popular + dissident + foreign + military + rebel + palace + auto,
                          data = Clean_coup,
                          family = "binomial",
                          refresh = 0)
@@ -221,6 +221,16 @@ print(fit_2)
 ```
 
 ```{r}
+
+#facet the distribution for fit_2
+
+newobs <- (tibble(coup_type = c("")))
+
+pe_eventype <- posterior_epred(fit_2, 
+                 newdata = newobs) %>% 
+                 as_tibble()
+
+
 newobs <- (tibble(event_type = c("coup", "attempted", "conspiracy")))
 
 pe_eventype <- posterior_epred(fit_event_type, 
@@ -254,7 +264,7 @@ pe_eventype %>%
      labs(title = "Posterior for Coup Success",
          subtitle = "which is most likely to be successful?",
          caption = "From Coup Data Set",
-         x = "Event Type",
+         x = "realization",
          y = "Probability") + 
     scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
     scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
