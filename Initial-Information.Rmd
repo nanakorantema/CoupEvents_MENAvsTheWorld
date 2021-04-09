@@ -13,6 +13,7 @@ library(rworldmap)
 library(rstanarm)
 library(dplyr) 
 library(skimr)
+library(ggdist)
 ```
 
 ```{r intial data entryy} 
@@ -224,52 +225,59 @@ print(fit_2)
 
 $realized_{i} = \beta_0 + \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_{i} + \beta_4 military + \beta_5 rebel + \beta_6 palace_{i} + \beta_7 auto + \epsilon_{i}$ 
 
-```{r}
-#facet the distribution for fit_2
+```{r popular resistance vs. rest}
 
-newobs2 <- tibble( popular = rep(c(1,0)), dissident = rep(c(1,0)), foreign = rep(c(1,0)),
-                   military = rep(c(1,0)), rebel = rep(c(1,0)), palace = rep(c(1,0)), 
-                   auto = rep(c(1,0)),
-                   names = paste(popular, dissident, foreign, military, rebel, 
-                                 palace, auto, c(1,0), sep = "_"))
-newobsx <- tibble( popular = 1, dissident =  1, foreign =  1,
-                   military =  1, rebel = 1, palace =  1, auto =  1))
 
-                  set_names(popular, dissident, foreign, military, rebel, 
-                                 palace, auto) 
+
+newobsx <- tibble( popular = c(1,0), dissident =  1, foreign =  1,
+                   military =  1, rebel = 1, palace =  1, auto =  1) %>% 
+                   mutate(names = paste("popular", popular, sep = "_"))
+                   
                   
                   
-newobsz <- tibble( popular = c(1,0), dissident = c(1,0), foreign = c(1,0),
-                   military = c(1,0), rebel = c(1,0), palace = c(1,0), auto = c(1,0)) 
 
 
 
-                  set_names(popular, dissident, foreign, military, rebel, 
-                                 palace, auto)
-     
-
-                                                 
-pe_2 <- posterior_epred(fit_2, 
-                 newdata = newobs2) %>% 
-                 as_tibble() 
- 
+              
+    
                  
 #popular, dissident, foreign, military, rebel,palace, auto
                              
 
 pe_x <- posterior_epred(fit_2, 
                  newdata = newobsx) %>% 
-                 as_tibble() 
- 
-pe_2
+                 as_tibble() %>% 
+                 set_names(newobsx$names) %>% 
+                 pivot_longer(names_to = "coup_type",
+                           values_to = "perc_realized",
+                           cols = c("popular_1", "popular_0"))
 
-scale_x_discrete(breaks = c(0, 1), 
-                   labels = c("Negative", "Positive"))
+
+pe_x %>% 
+  ggplot(aes(x = perc_realized, color = coup_type)) +
+          geom_histogram(aes(y = after_stat(count/sum(count))),
+                         alpha = 0.5, 
+                         bins = 100,
+                         fill = "darkorchid") +
+        labs(x = "Estimated Sucess of Coup",
+               y = "Probability") +
+          scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+          scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+          theme_classic()
+
+
+
 
 
 ```
  military = rep(c(1,0)), rebel = rep(c(1,0)), palace = rep(c(1,0)), auto = rep(c(1,0)) , names = paste(popular, dissident, foreign, military, rebel, palace, auto)
 
+```{r military vs rest}
+newobsz <- tibble( popular = 1, dissident =  1, foreign =  1,
+                   military =  c(1,0), rebel = 1, palace =  1, auto =  1) %>% 
+                   mutate(names = paste("military", popular, sep = "_"))
+                   
+```
 
 ```{r}
 newobs <- (tibble(event_type = c("coup", "attempted", "conspiracy")))
