@@ -42,9 +42,6 @@ map_info <- Clean_coup %>%
 
 ```{r map_1}
 
-
-
-
 map_1 <- hcmap(
   map = "custom/world-highres3", # high resolution world map
   data = map_info, # name of dataset
