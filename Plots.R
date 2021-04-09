@@ -8,6 +8,7 @@ library(maps)
 library(tidyverse)
 library(ggplot2)
 library(janitor)
+library(skimr)
 
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 

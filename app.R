@@ -8,6 +8,7 @@ library(maps)
 library(tidyverse)
 library(ggplot2)
 library(janitor)
+library(rstanarm)
 source("Plots.R")
 
 
@@ -34,23 +35,20 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           )),
                  tabPanel("Maps",
                           fluidPage(
-                                    titlePanel("Mapping Event Types"),
-                                    h3("Understanding the Event Types"),
-                                    p("Coups are a definitive event in the history of a nation-state. In this data set, it is best to understand
-                                    the included events as being part of two key categories: realized and unrealized. Coups are the only 
-                                    events that are realized (ie. succesful), meaning that it results in the incumbent's loss of power. Unrealized events 
-                                    include conspiracies and attempted coups which do not remove the targeted incumbent. A conspiracy is defined as a plot 
-                                    to execute a coup that is discovered and thwarted before it can be initiated. An attempted coup is an event when a coup plan
-                                    is initiated but fails to achieve its goal.
+                          titlePanel("Mapping Event Types"),
+                          h3("Understanding the Event Types"),
+                          p("Coups are a definitive event in the history of a nation-state. In this data set, it is best to understand
+                          the included events as being part of two key categories: realized and unrealized. Coups are the only 
+                          events that are realized (ie. succesful), meaning that it results in the incumbent's loss of power. Unrealized events 
+                          include conspiracies and attempted coups which do not remove the targeted incumbent. A conspiracy is defined as a plot 
+                          to execute a coup that is discovered and thwarted before it can be initiated. An attempted coup is an event when a coup plan
+                          is initiated but fails to achieve its goal.
                                       
-                                    This page includes interactive density maps that show how common each of these event types are all over the world."
-                                  ),
-                                
-                                         ),
+                          This page includes interactive density maps that show how common each of these event types are all over the world."),
                                         mainPanel(
-                                                  highchartOutput("map_1",height = '500px'),
-                                                  highchartOutput("map_2",height = '500px'),
-                                                  highchartOutput("map_3",height = '500px'))),
+                                                  highchartOutput("map_1", height = '500px'),
+                                                  highchartOutput("map_2", height = '500px'),
+                                                  highchartOutput("map_3", height = '500px')))),
                  
                  tabPanel("About", 
                           titlePanel("About"),
@@ -76,27 +74,23 @@ server <- function(input, output) {
     })
     
   
-  
 output$map_1 <- renderHighchart({
   
-  map_1  
+ map_1  
   
 })
       
-
-
         
 output$map_2 <- renderHighchart({   
         
 map_2      
         
-    })
+ })
     
 output$map_3 <- renderHighchart({
     
 map_3        
             
-        
     })
 }
 
