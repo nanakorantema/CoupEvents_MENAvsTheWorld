@@ -1,5 +1,4 @@
 library(shiny)
-library(primer.data)
 library(tidyverse)
 library(ggplot2)
 library(shinythemes)
