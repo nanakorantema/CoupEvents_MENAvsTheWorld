@@ -11,6 +11,8 @@ library(ggplot2)
 library(janitor)
 library(rworldmap)
 library(rstanarm)
+library(dplyr) 
+library(skimr)
 ```
 
 ```{r intial data entryy} 
@@ -155,6 +157,8 @@ thecoupMap <- mapCountryData( joined_data, nameColumnToPlot="Coups",
 
 
 ```
+
+
 ```{r mapping_attempts}
 
 grouped_attempted <- Clean_coup %>% 
@@ -196,14 +200,12 @@ theconspiracyMap <- mapCountryData( joined_data,
 
 
 ```
-```{r}
+
 #creating an interactive statistical model  - parameters (location, prior coup history (successful/unsuccessful) or incorporate all of the info? (conspiracy, attempted, coup), coup typology )
 
 #inputs= country, type of coup -> output unsuccessful, successful
 
 #interactive map- discuss next week? 
-```
-
 
 ```{r}
 fit_event_type <-   stan_glm(formula = realized ~ event_type,
@@ -220,17 +222,56 @@ print(fit_event_type)
 print(fit_2)
 ```
 
-```{r}
+$realized_{i} = \beta_0 + \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_{i} + \beta_4 military + \beta_5 rebel + \beta_6 palace_{i} + \beta_7 auto + \epsilon_{i}$ 
 
+```{r}
 #facet the distribution for fit_2
 
-newobs <- (tibble(coup_type = c("")))
+newobs2 <- tibble( popular = rep(c(1,0)), dissident = rep(c(1,0)), foreign = rep(c(1,0)),
+                   military = rep(c(1,0)), rebel = rep(c(1,0)), palace = rep(c(1,0)), 
+                   auto = rep(c(1,0)),
+                   names = paste(popular, dissident, foreign, military, rebel, 
+                                 palace, auto, c(1,0), sep = "_"))
+newobsx <- tibble( popular = 1, dissident =  1, foreign =  1,
+                   military =  1, rebel = 1, palace =  1, auto =  1))
 
-pe_eventype <- posterior_epred(fit_2, 
-                 newdata = newobs) %>% 
-                 as_tibble()
+                  set_names(popular, dissident, foreign, military, rebel, 
+                                 palace, auto) 
+                  
+                  
+newobsz <- tibble( popular = c(1,0), dissident = c(1,0), foreign = c(1,0),
+                   military = c(1,0), rebel = c(1,0), palace = c(1,0), auto = c(1,0)) 
 
 
+
+                  set_names(popular, dissident, foreign, military, rebel, 
+                                 palace, auto)
+     
+
+                                                 
+pe_2 <- posterior_epred(fit_2, 
+                 newdata = newobs2) %>% 
+                 as_tibble() 
+ 
+                 
+#popular, dissident, foreign, military, rebel,palace, auto
+                             
+
+pe_x <- posterior_epred(fit_2, 
+                 newdata = newobsx) %>% 
+                 as_tibble() 
+ 
+pe_2
+
+scale_x_discrete(breaks = c(0, 1), 
+                   labels = c("Negative", "Positive"))
+
+
+```
+ military = rep(c(1,0)), rebel = rep(c(1,0)), palace = rep(c(1,0)), auto = rep(c(1,0)) , names = paste(popular, dissident, foreign, military, rebel, palace, auto)
+
+
+```{r}
 newobs <- (tibble(event_type = c("coup", "attempted", "conspiracy")))
 
 pe_eventype <- posterior_epred(fit_event_type, 
