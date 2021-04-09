@@ -2,31 +2,24 @@ library(shiny)
 library(tidyverse)
 library(ggplot2)
 library(shinythemes)
-library(ggplot2)
-library(janitor)
-library(rworldmap)
 library(highcharter)
 library(dplyr)
 library(maps)
+library(tidyverse)
+library(ggplot2)
+library(janitor)
 source("Plots.R")
 
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),
                  "Coups and Democracy in the Middle East",
-                 tabPanel("Discussion",
-                          titlePanel("Project Data"),
-                          h3("Sourcing My Data"),
-                          p("For my project I plan to look at two data sets. I will first look at coup data collected 
-                            by The Cline Center for Advanced Social Resaerch. Their data set includes information
-                            on coups, attempted coups, and coup plots/conspiracies in 136 countries from 1945-2019.
-                            that data specifies the type of actor(s) who initiated the coup plots and information 
-                            regarding what happened to the deposed leader in each case. Being that the so called 
-                            Arab Spring has served as a catalyst for civil resistance and political reform in the Middle
-                            East, I am hoping to use this data to compare coup attempts in the region and the 
-                            rest of the world. 
-        
-                            ")),
+                 tabPanel("Coup Predictor", 
+                          titlePanel("Coup Predictor"),
+                          h3("Plan for this page"),
+                          p("As the last component of my project I hope to create a predictive model for the coup data based on parameters
+                            in the set. I would like users to be able to select a country and type of coup ( Military, dissident, rebel, palace,
+                            Foreign-backed, Auto, popular revolt, forced resignations). I think I would need to use posterior_epred ")),
                  tabPanel("Graphs", 
                           fluidPage(
                               titlePanel("Preliminary Coup Data"),
@@ -58,12 +51,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                   highchartOutput("map_1",height = '500px'),
                                                   highchartOutput("map_2",height = '500px'),
                                                   highchartOutput("map_3",height = '500px'))),
-                 tabPanel("Coup Predictor", 
-                          titlePanel("Coup Predictor"),
-                          h3("Plan for this page"),
-                          p("As the last component of my project I hope to create a predictive model for the coup data based on parameters
-                            in the set. I would like users to be able to select a country and type of coup ( Military, dissident, rebel, palace,
-                            Foreign-backed, Auto, popular revolt, forced resignations). I think I would need to use posterior_epred ")),
+                 
                  tabPanel("About", 
                           titlePanel("About"),
                           h3("Project Background and Motivations"),

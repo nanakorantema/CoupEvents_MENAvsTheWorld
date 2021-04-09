@@ -5,8 +5,9 @@ account: nanakkoranteng
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3936967
-bundleId: 4451120
+bundleId: 4451214
 url: https://nanakkoranteng.shinyapps.io/Final_Project/
-when: 1617982256.0244
+when: 1617983723.41512
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: Coup_Maps.R|README.md
