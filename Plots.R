@@ -10,7 +10,7 @@ library(tidyverse)
 library(ggplot2)
 library(janitor)
 
-coup_data <- read_csv(file = "Coup_Data_v2.0.0.csv")
+coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
 top_10_coups <- coup_data %>% 
   group_by(country) %>% 
@@ -54,6 +54,99 @@ plot_2 <- attempted_coups %>%
 
 #Mapping info
 
+Clean_coup <- coup_data %>% 
+  select( - c( unrealized, conspiracy, attempt, coup_id)) %>% 
+  group_by(year) %>% 
+  arrange(desc(year))
 
+
+map_info <- Clean_coup %>% 
+  group_by(country) %>% 
+  select(country, event_type, realized) %>% 
+  filter(event_type == "coup") %>% 
+  rename(mapname = "country")  %>% 
+  
+  group_by(event_type, mapname) %>%
+  summarise(n = n(),
+            .groups = "drop") %>% 
+  inner_join(iso3166,
+             by = "mapname") %>% 
+  rename("iso-a3" = a3)
+
+
+map_1 <- hcmap(
+  map = "custom/world-highres3", # high resolution world map
+  data = map_info, # name of dataset
+  joinBy = c("iso-a3"),
+  name = "Coups",
+  value = "n",
+  showInLegend = TRUE, # hide legend
+  nullColor = "#DADADA",
+  download_map_data = TRUE,
+  dataLabels = list(enabled = TRUE, format = "{point.country}",
+                    tooltip = list(
+                      valueDecimals = 2)))%>%
+  hc_mapNavigation(enabled = FALSE) %>%
+  hc_legend("none") %>%
+  hc_title(text = "Map of Coups from 1949 - 2019")
+
+
+map_info_attempt <- coup_data %>% 
+  group_by(country) %>% 
+  select(country, event_type, unrealized) %>% 
+  filter(event_type == "attempted") %>% 
+  rename(mapname = "country") %>% 
+  group_by(event_type, mapname) %>%
+  summarise(n = n(),
+            .groups = "drop") %>% 
+  inner_join(iso3166,
+             by = "mapname") %>% 
+  rename("iso-a3" = a3)
+
+
+map_2 <- hcmap(
+  map = "custom/world-highres3", # high resolution world map
+  data = map_info_attempt, # name of dataset
+  joinBy = c("iso-a3"),
+  name = "Attempts",
+  value = "n",
+  showInLegend = TRUE, # hide legend
+  nullColor = "#DADADA",
+  download_map_data = TRUE,
+  dataLabels = list(enabled = TRUE, format = "{point.country}",
+                    tooltip = list(
+                      valueDecimals = 2)))%>% 
+  hc_mapNavigation(enabled = FALSE) %>%
+  hc_legend("none") %>%
+  hc_title(text = "Map of Coups Attempts from 1949 - 2019") # title
+
+map_info_consp <- coup_data %>% 
+  group_by(country) %>% 
+  select(country, event_type, unrealized) %>% 
+  filter(event_type == "conspiracy") %>% 
+  rename(mapname = "country") %>% 
+  group_by(event_type, mapname) %>%
+  summarise(n = n(),
+            .groups = "drop") %>% 
+  inner_join(iso3166,
+             by = "mapname") %>% 
+  rename("iso-a3" = a3)
+
+
+map_3 <- hcmap(
+  map = "custom/world-highres3", # high resolution world map
+  data = map_info_consp, # name of dataset
+  joinBy = c("iso-a3"),
+  name = "Conspiracies",
+  value = "n",
+  showInLegend = TRUE, # hide legend
+  nullColor = "#DADADA",
+  download_map_data = TRUE,
+  dataLabels = list(enabled = TRUE, format = "{point.country}",
+                    tooltip = list(
+                      valueDecimals = 2)))%>% 
+  hc_mapNavigation(enabled = FALSE) %>%
+  hc_legend("none") %>%
+  hc_title(text = "Map of Coup Conspiracies from 1949 - 2019") # title
 
 

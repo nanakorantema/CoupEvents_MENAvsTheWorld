@@ -10,7 +10,7 @@ library(highcharter)
 library(dplyr)
 library(maps)
 source("Plots.R")
-source("Coup_Maps.R")
+
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),
@@ -27,14 +27,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             East, I am hoping to use this data to compare coup attempts in the region and the 
                             rest of the world. 
         
-                            Next, I plan to use an Arab barometer data set entitled Democracy in the Middle East 
-                            and North Africa: Five Years after the Arab Uprisings which explores opinions towards
-                            democracy in selected MENA countries. Essentially, I hope to look for some type of relationship
-                            between coup attempts in the region and feelings toward democracy. I will deinfitely need to take
-                            my time to go through the codebook for this set as the raw survey data uses many codes and scales.
-                            The direction of my project might change (and probably will as I take a closer look at the data)
-                            but I am excited about using two different types of data sets that will provide a meta and micro 
-                            level study of a region I am deeply interested in.")),
+                            ")),
                  tabPanel("Graphs", 
                           fluidPage(
                               titlePanel("Preliminary Coup Data"),
@@ -58,16 +51,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                     to execute a coup that is discovered and thwarted before it can be initiated. An attempted coup is an event when a coup plan
                                     is initiated but fails to achieve its goal.
                                       
-                                    This page includes density maps that show how common each of these event types are all over the world.
-                                      
-                                      I am also trying to create a highcharter map but cannot integrate it into my shinyapp just yet."
+                                    This page includes interactive density maps that show how common each of these event types are all over the world."
                                   ),
                                 
                                          ),
-                                        mainPanel(plotOutput("map1", height="560px", width="950px"),
+                                        mainPanel(
                                                   highchartOutput("map_1",height = '500px'),
-                                                  plotOutput("map2", height="560px", width="950px"),
-                                                  plotOutput("map3", height="560px", width="950px"))),
+                                                  highchartOutput("map_2",height = '500px'),
+                                                  highchartOutput("map_3",height = '500px'))),
                  tabPanel("Coup Predictor", 
                           titlePanel("Coup Predictor"),
                           h3("Plan for this page"),
@@ -97,104 +88,27 @@ server <- function(input, output) {
         }
     })
     
-    output$map1 <- renderPlot({
-        
-            
-            Clean_coup <- coup_data %>% 
-                select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
-                group_by(year) %>% 
-                arrange(desc(year))
-            
-            
-            grouped_coup <- Clean_coup %>% 
-                group_by(country, event_type) %>% 
-                summarise(Coups = n()) %>% 
-                filter(event_type == "coup")
-            
-            
-            joined_data <-joinCountryData2Map(grouped_coup,
-                                              joinCode = "NAME",
-                                              nameJoinColumn = "country")
-            
-            thecoupMap <- mapPolys( joined_data, nameColumnToPlot="Coups",
-                                          missingCountryCol='dark grey',
-                                          oceanCol="light blue",
-                                          addLegend=TRUE )
-            mtext("[Grey Color: No Data Available]",side=1,line=-1)
-    })
   
-    output$map_1 <- renderHighchart(
+  
+output$map_1 <- renderHighchart({
+  
+  map_1  
+  
+})
       
-      
-        map_1 <- hcmap(
-       map = "custom/world-highres3", # high resolution world map
-       data = map_info, # name of dataset
-       joinBy = c("iso-a3"),
-       name = "coups",
-       value = "n",
-       showInLegend = TRUE, # hide legend
-       nullColor = "#DADADA",
-       download_map_data = TRUE,
-       dataLabels = list(enabled = TRUE, format = "{point.country}",
-       tooltip = list(
-       valueDecimals = 2)))%>%
-       hc_mapNavigation(enabled = FALSE) %>%
-       hc_legend("none") %>%
-       hc_title(text = "Coup Map from 1949 - 2019"))
+
 
         
-    output$map2 <- renderPlot({   
+output$map_2 <- renderHighchart({   
         
-      
-           
-           Clean_coup <- coup_data %>% 
-               select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
-               group_by(year) %>% 
-               arrange(desc(year))
-        
-            grouped_attempted <- Clean_coup %>% 
-                group_by(country, event_type) %>% 
-                summarise(Attempts = n()) %>% 
-                filter(event_type == "attempted")
-            
-            
-            joined_data <-joinCountryData2Map(grouped_attempted,
-                                              joinCode = "NAME",
-                                              nameJoinColumn = "country")
-            
-            theattemptedMap <- mapPolys(joined_data, nameColumnToPlot="Attempts",
-                                               missingCountryCol='dark grey',
-                                               oceanCol="light blue",
-                                               addLegend=TRUE )
-            mtext("[Grey Color: No Data Available]",side=1,line=-1)  
-        
+map_2      
         
     })
     
-    output$map3 <- renderPlot({
+output$map_3 <- renderHighchart({
     
+map_3        
             
-            Clean_coup <- coup_data %>% 
-                select( - c(realized, unrealized, conspiracy, attempt, coup_id)) %>% 
-                group_by(year) %>% 
-                arrange(desc(year))
-            
-            grouped_conspiracy <- Clean_coup %>% 
-                group_by(country, event_type) %>% 
-                summarise(Conspiracies = n()) %>% 
-                filter(event_type == "conspiracy")
-            
-            
-            joined_data <-joinCountryData2Map(grouped_conspiracy,
-                                              joinCode = "NAME",
-                                              nameJoinColumn = "country")
-            
-            theconspiracyMap <- mapCountryData( joined_data, 
-                                                nameColumnToPlot="Conspiracies",
-                                                missingCountryCol='dark grey',
-                                                oceanCol="light blue",
-                                                addLegend=TRUE )
-            mtext("[Grey Color: No Data Available]",side=1,line=-1)
         
     })
 }
