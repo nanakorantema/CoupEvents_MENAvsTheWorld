@@ -13,6 +13,7 @@ library(rstanarm)
 library(dplyr) 
 library(skimr)
 library(ggdist)
+
 ```
 
 ```{r intial data entryy} 
@@ -205,13 +206,8 @@ theconspiracyMap <- mapCountryData( joined_data,
 
 #inputs= country, type of coup -> output unsuccessful, successful
 
-#interactive map- discuss next week? 
 
 ```{r}
-fit_event_type <-   stan_glm(formula = realized ~ event_type,
-                         data = Clean_coup,
-                         family = "binomial",
-                         refresh = 0)
 
 fit_2 <- stan_glm(formula = realized ~  popular + dissident + foreign + military + rebel + palace + auto,
                          data = Clean_coup,
@@ -231,16 +227,7 @@ $realized_{i} = \beta_0 + \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3
 newobsx <- tibble( popular = c(1,0), dissident =  1, foreign =  1,
                    military =  1, rebel = 1, palace =  1, auto =  1) %>% 
                    mutate(names = paste("popular", popular, sep = "_"))
-                   
-                  
-                  
-
-
-
               
-    
-                 
-#popular, dissident, foreign, military, rebel,palace, auto
                              
 
 pe_x <- posterior_epred(fit_2, 
@@ -274,49 +261,40 @@ pe_x %>%
 ```{r military vs rest}
 newobsz <- tibble( popular = 1, dissident =  1, foreign =  1,
                    military =  c(1,0), rebel = 1, palace =  1, auto =  1) %>% 
-                   mutate(names = paste("military", popular, sep = "_"))
+                   mutate(names = paste("military", military, sep = "_"))
+
+pe_z <- posterior_epred(fit_2, 
+                 newdata = newobsz) %>% 
+                 as_tibble() %>% 
+                 set_names(newobsz$names) %>% 
+                 pivot_longer(names_to = "coup_type",
+                           values_to = "perc_realized",
+                           cols = c("military_1", "military_0"))
+
+pe_z %>% 
+  ggplot(aes(x = perc_realized)) +
+  stat_slab(aes(fill = coup_type))
                    
 ```
 
 ```{r}
-newobs <- (tibble(event_type = c("coup", "attempted", "conspiracy")))
+fit_3 <-   stan_glm(formula = realized ~ event_type + killed,
+                         data = Clean_coup,
+                         family = "binomial",
+                         refresh = 0)
+fit_3
 
-pe_eventype <- posterior_epred(fit_event_type, 
-                 newdata = newobs) %>% 
-                 as_tibble() %>% 
-                 rename(Attempted = `1`) %>% 
-                 rename(Conspiracy = `2`) %>% 
-                 rename(Coup = `3`) %>% 
-                 pivot_longer(cols = c(Attempted, Conspiracy, Coup),
-                              names_to =  "event_type",
-                              values_to = "success") 
+newobs3 <-  tibble(event_type = rep(c("coup", "conspiracy", "attmepted"), 2),
+                    killed = rep(c(1,0), 3)) %>% 
+                    mutate(names = paste(event_type, killed, sep = "_"))
 
-pe_eventype %>% 
-  ggplot(aes(x = success, fill = event_type)) +
-    geom_dotplot() +
-     labs(title = "Posterior for Coup Success",
-         subtitle = "which is most likely to be successful?",
-         caption = "From Coup Data Set",
-         x = "Event Type",
-         y = "Probability") + 
-    scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-    theme_classic()
-
-pe_eventype %>% 
-  ggplot(aes(x = success, fill = event_type)) +
-    geom_histogram(aes(y = after_stat(count/sum(count))),
-                   alpha = 0.5, 
-                   bins = 50, 
-                   position = "identity") +
-     labs(title = "Posterior for Coup Success",
-         subtitle = "which is most likely to be successful?",
-         caption = "From Coup Data Set",
-         x = "realization",
-         y = "Probability") + 
-    scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-    theme_classic()
-
-```
+pe_3 <- posterior_epred(fit_3, 
+                         newdata = newobs3) %>% 
+                         as_tibble() 
+                         set_names(newobs3$names) 
+                         pivot_longer(names_to = "event_type",
+                                      values_to = "perc_realized",
+                                      cols = c("coup_1" : "attemtped_0")) 
+                         separate(event_type, into = c("") 
+        ```
 
