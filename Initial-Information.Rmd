@@ -13,6 +13,7 @@ library(rstanarm)
 library(dplyr) 
 library(skimr)
 library(ggdist)
+library(tidybayes)
 
 ```
 
@@ -214,32 +215,53 @@ fit_2 <- stan_glm(formula = realized ~  popular + dissident + foreign + military
                          family = "binomial",
                          refresh = 0)
 
-print(fit_event_type)
 print(fit_2)
 ```
 
 $realized_{i} = \beta_0 + \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_{i} + \beta_4 military + \beta_5 rebel + \beta_6 palace_{i} + \beta_7 auto + \epsilon_{i}$ 
 
+```{r popular resistance vs. rest1}
+popular <- unique(Clean_coup$popular)
+dissident <- 1
+foreign <- 1
+military <- 1
+rebel <- 1
+palace <- 1
+auto <- 1
+
+
+newobs_1 <- tibble(expand_grid(popular, dissident, foreign, military, rebel, 
+	   palace, auto))
+
+pe_2 <- add_fitted_draws(newobs_1, fit_2) 
+
+pe_2 %>% 
+  pivot_longer(names_to = "Coup_Method",
+               values_to = "Occurance",
+               cols = popular:palace) %>% 
+  ggplot(aes(x = `.value`, y = Coup_Method)) +
+  stat_slab(aes(fill = Occurance))
+
+```
+
+
 ```{r popular resistance vs. rest}
-
-
-
-newobsx <- tibble( popular = c(1,0), dissident =  1, foreign =  1,
+newobs1 <- tibble( popular = c(1,0), dissident =  1, foreign =  1,
                    military =  1, rebel = 1, palace =  1, auto =  1) %>% 
                    mutate(names = paste("popular", popular, sep = "_"))
               
                              
 
-pe_x <- posterior_epred(fit_2, 
-                 newdata = newobsx) %>% 
+pe_1 <- posterior_epred(fit_2, 
+                 newdata = newobs1) %>% 
                  as_tibble() %>% 
-                 set_names(newobsx$names) %>% 
+                 set_names(newobs1$names) %>% 
                  pivot_longer(names_to = "coup_type",
                            values_to = "perc_realized",
                            cols = c("popular_1", "popular_0"))
 
 
-pe_x %>% 
+pe_1 %>% 
   ggplot(aes(x = perc_realized, color = coup_type)) +
           geom_histogram(aes(y = after_stat(count/sum(count))),
                          alpha = 0.5, 
@@ -273,28 +295,33 @@ pe_z <- posterior_epred(fit_2,
 
 pe_z %>% 
   ggplot(aes(x = perc_realized)) +
-  stat_slab(aes(fill = coup_type))
+  stat_slab(aes(fill = coup_type),
+                alpha = .5)
                    
 ```
 
-```{r}
+```{r fit_3}
 fit_3 <-   stan_glm(formula = realized ~ event_type + killed,
                          data = Clean_coup,
                          family = "binomial",
                          refresh = 0)
 fit_3
 
-newobs3 <-  tibble(event_type = rep(c("coup", "conspiracy", "attmepted"), 2),
-                    killed = rep(c(1,0), 3)) %>% 
-                    mutate(names = paste(event_type, killed, sep = "_"))
 
-pe_3 <- posterior_epred(fit_3, 
-                         newdata = newobs3) %>% 
-                         as_tibble() 
-                         set_names(newobs3$names) 
-                         pivot_longer(names_to = "event_type",
-                                      values_to = "perc_realized",
-                                      cols = c("coup_1" : "attemtped_0")) 
-                         separate(event_type, into = c("") 
-        ```
+event_type <- unique(Clean_coup$event_type)
+killed <- unique(Clean_coup$killed)
+
+newobs_3 <- tibble(expand_grid(event_type, killed)) 
+
+
+
+
+pe_3 <- add_fitted_draws(newobs_3, fit_3) 
+
+pe_3 %>% 
+  filter(event_type != "coup") %>% 
+  ggplot(aes(x = `.value`, y = event_type)) +
+  stat_slab()
+
+```
 
