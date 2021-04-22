@@ -10,6 +10,7 @@ library(ggplot2)
 library(janitor)
 library(skimr)
 
+
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
 top_10_coups <- coup_data %>% 
@@ -54,11 +55,11 @@ plot_2 <- attempted_coups %>%
 
 #Mapping info
 
+
+
 #I cleaned the data a bit in preparation for creating these maps
-Clean_coup <- coup_data %>% 
-  select( - c( unrealized, conspiracy, attempt, coup_id)) %>% 
-  group_by(year) %>% 
-  arrange(desc(year))
+
+load("Coup_Data/clean_coup_data")
 
 # In oder to use higherCharter to create my maps, I needed to join a a specific
 # mapping data set 

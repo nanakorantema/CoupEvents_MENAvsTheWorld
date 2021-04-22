@@ -8,14 +8,16 @@ library(maps)
 library(tidyverse)
 library(ggplot2)
 library(janitor)
+library(skimr)
+library(rstanarm)
 source("Plots.R")
 
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),
-                 "Coups and Stability: How the Middle East Compares to the Rest of the World",
-                 tabPanel("Coup Predictor", 
-                          titlePanel("Coup Predictor"),
+                 "Coups Events and How the Middle East Compares to the Rest of the World",
+                 tabPanel("Coup Analysis", 
+                          titlePanel("Coup Events"),
                           h3("Plan for this page"),
                           p("As the last component of my project I hope to create a predictive model for the coup data based on parameters
                             in the set. I would like users to be able to select a country and type of coup ( Military, dissident, rebel, palace,

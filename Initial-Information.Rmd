@@ -20,6 +20,7 @@ library(tidybayes)
 ```{r intial data entryy} 
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
+
 ```
 
   ## Key Questions:
@@ -41,7 +42,7 @@ Clean_coup <- coup_data %>%
   group_by(year) %>% 
   arrange(desc(year))
 
-Clean_coup
+save(Clean_coup, file = "clean_coup_data")
 ```
 
 

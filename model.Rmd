@@ -58,6 +58,7 @@ fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + killed + me
                   seed = 13)
 
 
+saveRDS(fit_1, file = "fit_1")
 
 
 #Middle_east* interaction with other variables- interaction between two terms that matter - one model that captures the complete reality 
