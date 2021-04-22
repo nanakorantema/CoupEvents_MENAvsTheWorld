@@ -54,12 +54,14 @@ plot_2 <- attempted_coups %>%
 
 #Mapping info
 
+#I cleaned the data a bit in preparation for creating these maps
 Clean_coup <- coup_data %>% 
   select( - c( unrealized, conspiracy, attempt, coup_id)) %>% 
   group_by(year) %>% 
   arrange(desc(year))
 
-
+# In oder to use higherCharter to create my maps, I needed to join a a specific
+# mapping data set 
 map_info <- Clean_coup %>% 
   group_by(country) %>% 
   select(country, event_type, realized) %>% 
@@ -88,7 +90,7 @@ map_1 <- hcmap(
                       valueDecimals = 2)))%>%
   hc_mapNavigation(enabled = FALSE) %>%
   hc_legend("none") %>%
-  hc_title(text = "Map of Coups from 1949 - 2019")
+  hc_title(text = "Map of Coups from 1949 - 2019") 
 
 
 map_info_attempt <- coup_data %>% 
@@ -105,12 +107,12 @@ map_info_attempt <- coup_data %>%
 
 
 map_2 <- hcmap(
-  map = "custom/world-highres3", # high resolution world map
-  data = map_info_attempt, # name of dataset
+  map = "custom/world-highres3", 
+  data = map_info_attempt, 
   joinBy = c("iso-a3"),
   name = "Attempts",
   value = "n",
-  showInLegend = TRUE, # hide legend
+  showInLegend = TRUE, 
   nullColor = "#DADADA",
   download_map_data = TRUE,
   dataLabels = list(enabled = TRUE, format = "{point.country}",
@@ -118,7 +120,7 @@ map_2 <- hcmap(
                       valueDecimals = 2)))%>% 
   hc_mapNavigation(enabled = FALSE) %>%
   hc_legend("none") %>%
-  hc_title(text = "Map of Coup Attempts from 1949 - 2019") # title
+  hc_title(text = "Map of Coup Attempts from 1949 - 2019") 
 
 map_info_consp <- coup_data %>% 
   group_by(country) %>% 
@@ -134,12 +136,12 @@ map_info_consp <- coup_data %>%
 
 
 map_3 <- hcmap(
-  map = "custom/world-highres3", # high resolution world map
-  data = map_info_consp, # name of dataset
+  map = "custom/world-highres3", 
+  data = map_info_consp, 
   joinBy = c("iso-a3"),
   name = "Conspiracies",
   value = "n",
-  showInLegend = TRUE, # hide legend
+  showInLegend = TRUE, 
   nullColor = "#DADADA",
   download_map_data = TRUE,
   dataLabels = list(enabled = TRUE, format = "{point.country}",
@@ -147,6 +149,6 @@ map_3 <- hcmap(
                       valueDecimals = 2)))%>% 
   hc_mapNavigation(enabled = FALSE) %>%
   hc_legend("none") %>%
-  hc_title(text = "Map of Coup Conspiracies from 1949 - 2019") # title
+  hc_title(text = "Map of Coup Conspiracies from 1949 - 2019") 
 
 
