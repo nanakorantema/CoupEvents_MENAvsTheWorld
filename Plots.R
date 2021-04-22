@@ -44,7 +44,7 @@ plot_2 <- attempted_coups %>%
   ggplot(aes(x = fct_reorder(country, failed_attempts),
              y = failed_attempts)) +
   labs(title = "Top 10 Countries with the Most Unsuccessful Coups from 1945- 2019",
-       subtitle = "Coups fail all over the world",
+       subtitle = "Coups fail all over the world, but especially Central & Latin America",
        caption = "Source: Cline Center Coup D’état Project Dataset",
        x = "Country",
        y = "Number of Unsuccessful Coups") +
@@ -118,7 +118,7 @@ map_2 <- hcmap(
                       valueDecimals = 2)))%>% 
   hc_mapNavigation(enabled = FALSE) %>%
   hc_legend("none") %>%
-  hc_title(text = "Map of Coups Attempts from 1949 - 2019") # title
+  hc_title(text = "Map of Coup Attempts from 1949 - 2019") # title
 
 map_info_consp <- coup_data %>% 
   group_by(country) %>% 

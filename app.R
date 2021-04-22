@@ -8,13 +8,12 @@ library(maps)
 library(tidyverse)
 library(ggplot2)
 library(janitor)
-library(rstanarm)
 source("Plots.R")
 
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),
-                 "Coups and Democracy in the Middle East",
+                 "Coups and Stability: How the Middle East Compares to the Rest of the World",
                  tabPanel("Coup Predictor", 
                           titlePanel("Coup Predictor"),
                           h3("Plan for this page"),

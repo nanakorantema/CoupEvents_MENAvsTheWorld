@@ -5,16 +5,14 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(infer)
 library(tidyverse)
 library(tidymodels)
-library(rpart.plot)
 library(rstanarm)
 library(tidybayes)
 library(gtsummary)
 library(Rcpp)
 library(gt)
-library(scales)
+library(patchwork)
 ```
 
 ```{r intial data}
@@ -23,15 +21,6 @@ coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
 
 
-coup_data %>% 
-  cols(
-  .default = col_double(),
-  coup_id = col_character(),
-  country = col_character(),
-  month = col_character(),
-  day = col_character(),
-  event_type = col_character()
-)
 
 model_data <- coup_data %>% 
                   select( - c(unrealized, conspiracy, attempt, coup_id, day, noharm)) %>%
@@ -49,7 +38,7 @@ model_data <- coup_data %>%
                                                          "Oman", "Qatar", "Saudi Arabia", 
                                                          "Syria", "Tunisia", "United Arab Emirates",
                                                          "Yemen"), TRUE, FALSE))
-
+saveRDS(model_data, file = "Model_Data")
 ```
 
 ```{r fit_1}
@@ -61,7 +50,7 @@ model_data <- coup_data %>%
 #the Middle East and seek to explore its interaction with the coup types to
 #determine if they have as significant causal effect.
 
-fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + killed + mena - 1 + mena*popular + mena*military +  mena*foreign + mena*auto,
+fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + killed + mena - 1 + mena*popular + mena*military +  mena*foreign + mena*palace,
                   #add interaction terms? -> military, middle east, event_type, military*middle east?
                   family = "binomial",
                   model_data,
@@ -81,14 +70,16 @@ fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + killed + me
 
 
 
-```{r}
+```{r warning=FALSE}
 Table_1 <- tbl_regression(fit_1, 
                            intercept = TRUE, 
                            estimate_fun = function(x) style_sigfig(x, digits = 4)) %>%
-                          as_gt()
+            as_gt()
               # Using Beta as the name of the parameter column is weird.
               
 Table_1
+
+
 
 ```
 
@@ -101,23 +92,71 @@ $realized_{i} =  \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_
 popular <- unique(model_data$popular)
 military <- unique(model_data$military)
 foreign <- unique(model_data$foreign)
-auto <- unique(model_data$auto)
+palace <- unique(model_data$palace)
 killed <- unique(model_data$killed)
+mena <- unique(model_data$mena)
 
-newobs_1 <- tibble(expand_grid( killed, popular, military, foreign, auto)) 
+newobs_1 <- expand_grid( killed, popular, military, foreign, palace, mena) 
 
 pe_1 <- add_fitted_draws(newobs_1, fit_1) 
 
-pe_1 %>% 
-  filter(event_type == "coup") %>% 
-  ggplot(aes(x = `.value`, y = event_type, fill = country)) +
-  stat_slab()
+
+palace_pe <- pe_1 %>% 
+              ggplot(aes(x = .value, y = as.character(palace == 1), fill = mena)) +
+              stat_slab(alpha =.5) +
+              labs(x = "Probability of Realization",
+                   y = "Palace Coup",
+                   fill = "MENA") +
+              theme(legend.title = element_text(face = "bold")) +
+              theme_tidybayes() 
+palace_pe
 
 ```
 
 ```{r pe_2}
 
+popular_pe <- pe_1 %>% 
+                ggplot(aes(x = .value, y = as.character(popular == 1), fill = mena)) +
+                stat_slab(alpha =.5) +
+                labs(x = "Probability of Realization",
+                     y = "Popular Coup",
+                     fill = "MENA") +
+                theme(legend.title = element_text(face = "bold")) +
+                theme_tidybayes()
+ 
+```
 
+```{r}
+foreign_pe <- pe_1 %>% 
+                ggplot(aes(x = .value, y = as.character(foreign == 1), fill = mena)) +
+                stat_slab(alpha =.5) +
+                labs(x = "Probability of Realization",
+                     y = "Foreign Backed Coup",
+                     fill = "MENA") +
+                theme(legend.title = element_text(face = "bold")) +
+                theme_tidybayes()
+```
+
+```{r}
+military_pe <- pe_1 %>% 
+                ggplot(aes(x = .value, y = as.character(military), fill = mena)) +
+                labs(x = "Probability of Realization",
+                     y = "Military Coup",
+                     fill = "MENA") +
+                theme(legend.title = element_text(face = "bold")) +
+                stat_slab(alpha =.5) +
+                theme_tidybayes()
+```
+
+```{r model_visual}
+
+mena_interaction <- palace_pe + popular_pe + foreign_pe + military_pe
+
+mena_interaction +
+   plot_annotation(title = "Posterior Distribution",
+                   subtitle = "Based on a 2020 field experiment encouraging
+                   voting by mail, more specifically the `Neighborhood` treatment",
+                   caption = "Source: Hopkins et al (2021)") 
 
 ```
 
