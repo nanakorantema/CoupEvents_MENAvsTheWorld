@@ -1,5 +1,4 @@
 library(tidyverse)
-library(rstanarm)
 library(tidybayes)
 library(gtsummary)
 library(Rcpp)
