@@ -11,7 +11,14 @@ library(janitor)
 library(skimr)
 
 
-coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
+coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
+  .default = col_double(),
+  coup_id = col_character(),
+  country = col_character(),
+  month = col_character(),
+  day = col_character(),
+  event_type = col_character()
+))
 
 top_10_coups <- coup_data %>% 
   group_by(country) %>% 
@@ -55,13 +62,16 @@ plot_2 <- attempted_coups %>%
 
 #Mapping info
 
-
+coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
 #I cleaned the data a bit in preparation for creating these maps
 
-load("Coup_Data/clean_coup_data")
+#load("Coup_Data/clean_coup_data.rds")
 
-# In oder to use higherCharter to create my maps, I needed to join a a specific
+
+Clean_coup <- readRDS("Coup_Data/clean_coup_data.rds")
+
+# In order to use highcharter to create my maps, I needed to join a a specific
 # mapping data set 
 map_info <- Clean_coup %>% 
   group_by(country) %>% 

@@ -18,7 +18,14 @@ library(tidybayes)
 ```
 
 ```{r intial data entryy} 
-coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
+coup_data <- read_csv(file = "Coup_Data_v2.0.0.csv", col_types = cols(
+  .default = col_double(),
+  coup_id = col_character(),
+  country = col_character(),
+  month = col_character(),
+  day = col_character(),
+  event_type = col_character()
+))
 
 
 ```
@@ -40,9 +47,10 @@ coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 Clean_coup <- coup_data %>% 
   select( - c(unrealized, conspiracy, attempt, coup_id, day, noharm)) %>% 
   group_by(year) %>% 
-  arrange(desc(year))
+  arrange(desc(year)) 
+  
 
-save(Clean_coup, file = "clean_coup_data")
+#saveRDS(Clean_coup, file = "clean_coup_data.rds")
 ```
 
 

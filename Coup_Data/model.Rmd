@@ -38,7 +38,7 @@ model_data <- coup_data %>%
                                                          "Oman", "Qatar", "Saudi Arabia", 
                                                          "Syria", "Tunisia", "United Arab Emirates",
                                                          "Yemen"), TRUE, FALSE))
-saveRDS(model_data, file = "Model_Data")
+saveRDS(model_data, file = "Model_Data.rds")
 ```
 
 ```{r fit_1}
@@ -50,7 +50,7 @@ saveRDS(model_data, file = "Model_Data")
 #the Middle East and seek to explore its interaction with the coup types to
 #determine if they have as significant causal effect.
 
-fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + killed + mena - 1 + mena*popular + mena*military +  mena*foreign + mena*palace,
+fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + mena - 1 + mena*popular + mena*military +  mena*foreign + mena*palace,
                   #add interaction terms? -> military, middle east, event_type, military*middle east?
                   family = "binomial",
                   model_data,
@@ -86,6 +86,7 @@ Table_1
 
 
 $realized_{i} =  \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_{i} + \beta_4 military + \beta_5 rebel + \beta_6 palace_{i} + \beta_7 auto + \epsilon_{i}$ 
+#import knitted r markdown (google how)
 
 ```{r,  warning=FALSE}
 
@@ -94,21 +95,25 @@ popular <- unique(model_data$popular)
 military <- unique(model_data$military)
 foreign <- unique(model_data$foreign)
 palace <- unique(model_data$palace)
-killed <- unique(model_data$killed)
 mena <- unique(model_data$mena)
 
-newobs_1 <- expand_grid( killed, popular, military, foreign, palace, mena) 
+newobs_1 <- expand_grid(popular, military, foreign, palace, mena) 
 
 pe_1 <- add_fitted_draws(newobs_1, fit_1) 
 
 
 palace_pe <- pe_1 %>% 
-              ggplot(aes(x = .value, y = as.character(palace == 1), fill = mena)) +
+              filter(palace == 1,
+                     popular == 0,
+                     military == 0,
+                     foreign == 0) %>% 
+              ggplot(aes(x = .value, y = as.character(palace), fill = mena)) +
               stat_slab(alpha =.5) +
               labs(x = "Probability of Realization",
                    y = "Palace Coup",
                    fill = "MENA") +
               theme(legend.title = element_text(face = "bold")) +
+              scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
               theme_tidybayes() 
 palace_pe
 
@@ -117,47 +122,84 @@ palace_pe
 ```{r pe_2}
 
 popular_pe <- pe_1 %>% 
+                filter(palace == 0,
+                     popular %in% 1,
+                     military == 0,
+                     foreign == 0) %>% 
                 ggplot(aes(x = .value, y = as.character(popular == 1), fill = mena)) +
                 stat_slab(alpha =.5) +
                 labs(x = "Probability of Realization",
                      y = "Popular Coup",
                      fill = "MENA") +
+                scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
                 theme(legend.title = element_text(face = "bold")) +
                 theme_tidybayes()
+
+popular_pe
  
 ```
 
 ```{r}
 foreign_pe <- pe_1 %>% 
+                filter(palace == 0,
+                       popular == 0,
+                       military == 0,
+                       foreign == 1) %>% 
                 ggplot(aes(x = .value, y = as.character(foreign == 1), fill = mena)) +
                 stat_slab(alpha =.5) +
                 labs(x = "Probability of Realization",
                      y = "Foreign Backed Coup",
                      fill = "MENA") +
                 theme(legend.title = element_text(face = "bold")) +
+                scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
                 theme_tidybayes()
+
+foreign_pe
 ```
 
 ```{r}
-military_pe <- pe_1 %>% 
-                ggplot(aes(x = .value, y = as.character(military), fill = mena)) +
+military_pe <- pe_1 %>% filter(palace == 0,
+                               popular == 0,
+                               military == 1,
+                               foreign == 0) %>% 
+                ggplot(aes(x = .value, y = as.character(military == 1), fill = mena)) +
                 labs(x = "Probability of Realization",
                      y = "Military Coup",
                      fill = "MENA") +
                 theme(legend.title = element_text(face = "bold")) +
                 stat_slab(alpha =.5) +
+                scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
                 theme_tidybayes()
+
+military_pe
 ```
 
 ```{r model_visual}
 
 mena_interaction <- palace_pe + popular_pe + foreign_pe + military_pe
 
-mena_interaction +
-   plot_annotation(title = "Posterior Distribution",
-                   subtitle = "Based on a 2020 field experiment encouraging
-                   voting by mail, more specifically the `Neighborhood` treatment",
-                   caption = "Source: Hopkins et al (2021)") 
 
+mena_plots <- mena_interaction +
+   plot_annotation(title = "Posterior Probability Distribution for Top 4 Coup Types in MENA",
+                   subtitle = "For the most part they are more popular outside of the MENA",
+                   caption = "Source: Hopkins et al (2021)") &
+    coord_cartesian(xlim = c(0,1.0)) 
+
+
+
+```
+
+
+```{r}
+
+#newobs <- tibble(  = rep(c("Male", "Female"), 3), election_age = rep(c(30, 45, 60), 2),
+                  #names = paste(sex, election_age, sep = "_"))
+
+pe_1.2 <- posterior_epred(fit_1,
+                          newdata = newobs_1) %>% 
+                      as_tibble() %>% 
+   
+   #use set names to take heading names from newobs
+                      set_names( newobs_1$names)
 ```
 
