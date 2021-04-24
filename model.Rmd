@@ -12,12 +12,20 @@ library(tidybayes)
 library(gtsummary)
 library(Rcpp)
 library(gt)
+library(ggdist)
 library(patchwork)
 ```
 
 ```{r intial data}
 
-coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
+coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
+  .default = col_double(),
+  coup_id = col_character(),
+  country = col_character(),
+  month = col_character(),
+  day = col_character(),
+  event_type = col_character()
+))
 
 
 
@@ -38,7 +46,7 @@ model_data <- coup_data %>%
                                                          "Oman", "Qatar", "Saudi Arabia", 
                                                          "Syria", "Tunisia", "United Arab Emirates",
                                                          "Yemen"), TRUE, FALSE))
-saveRDS(model_data, file = "Model_Data.rds")
+#saveRDS(model_data, file = "Model_Data.rds")
 ```
 
 ```{r fit_1}
@@ -58,7 +66,7 @@ fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + mena - 1 + 
                   seed = 13)
 
 
-saveRDS(fit_1, file = "fit_1")
+#saveRDS(fit_1, file = "fit_1.rds")
 
 
 #Middle_east* interaction with other variables- interaction between two terms that matter - one model that captures the complete reality 
@@ -73,13 +81,15 @@ saveRDS(fit_1, file = "fit_1")
 
 ```{r warning=FALSE}
 Table_1 <- tbl_regression(fit_1, 
-                           intercept = TRUE, 
+                           intercept = TRUE,  exponentiate = TRUE,
                            estimate_fun = function(x) style_sigfig(x, digits = 4)) %>%
             as_gt()
               # Using Beta as the name of the parameter column is weird.
               
+
 Table_1
 
+gtsave(Table_1,"Table_1.png")
 
 
 ```
@@ -99,7 +109,10 @@ mena <- unique(model_data$mena)
 
 newobs_1 <- expand_grid(popular, military, foreign, palace, mena) 
 
-pe_1 <- add_fitted_draws(newobs_1, fit_1) 
+pe_1 <- add_fitted_draws(newobs_1, fit_1) %>% 
+      as_tibble()
+
+#saveRDS(pe_1, "pe_1.rds")
 
 
 palace_pe <- pe_1 %>% 

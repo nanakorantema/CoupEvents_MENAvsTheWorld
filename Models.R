@@ -3,6 +3,9 @@ library(tidybayes)
 library(gtsummary)
 library(Rcpp)
 library(gt)
+library(broom.mixed)
+library(ggdist)
+library(rstanarm)
 library(patchwork)
 
 
@@ -16,9 +19,9 @@ library(patchwork)
 fit_1 <- readRDS("Coup_Data/fit_1.rds")
 
 Table_1 <- tbl_regression(fit_1, 
-                          intercept = TRUE, 
+                          intercept = TRUE,  exponentiate = TRUE,
                           estimate_fun = function(x) style_sigfig(x, digits = 4)) %>%
-              as_gt()
+            as_gt()
 #render as gt
 
 pe_1 <- readRDS("Coup_Data/pe_1.rds")
