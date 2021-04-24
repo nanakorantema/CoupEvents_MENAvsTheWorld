@@ -51,7 +51,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 )),
                               mainPanel(plotOutput("plots"))),
                           p("You can find an experts take on instability in the MENA Through this link:"),
-                          a("Stability in the Middle East: The Range of Short and Long-Term Causes ,", 
+                          a("Stability in the Middle East: The Range of Short and Long-Term Causes", 
                             href = 
                               "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes")
                           )),
