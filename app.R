@@ -90,7 +90,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           h2("Bibliography"),
                           p("Peyton, Buddy, Joseph Bajjalieh, Dan Shalmon, Michael Martin, and Jonathan Bonaguro. 2020. Cline Center Coup D’état Project Dataset. 
                           Cline Center for Advanced Social Research. V.2.0.0. November 16. University of Illinois Urbana-Champaign. doi: 10.13012/B2IDB-9651987_V"),
-                          p("Check out my github repository to see how my shiny app works!", 
+                          a("Check out my github repository to see how my shiny app works!", 
                             href = "https://github.com/nanakorantema/Final_Project")))
 
 
