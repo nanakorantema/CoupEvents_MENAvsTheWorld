@@ -5,7 +5,6 @@ library(Rcpp)
 library(gt)
 library(broom.mixed)
 library(ggdist)
-library(rstanarm)
 library(patchwork)
 
 
