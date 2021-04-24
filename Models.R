@@ -2,7 +2,6 @@ library(tidyverse)
 library(tidybayes)
 library(gtsummary)
 library(Rcpp)
-library(rstanarm)
 library(gt)
 library(patchwork)
 
