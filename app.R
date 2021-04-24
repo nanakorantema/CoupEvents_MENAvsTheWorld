@@ -12,6 +12,7 @@ library(tidybayes)
 library(gtsummary)
 library(Rcpp)
 library(ggdist)
+library(rstanarm)
 library(gt)
 library(broom.mixed)
 library(patchwork)
@@ -25,11 +26,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  tabPanel("Introduction", 
                           fluidPage(
                           titlePanel("Introduction"),
-                          h3("Why and Where do Coups Occur?"),
+                          h3("Understandging Coups"),
                             p(" The Middle East and North Africa (MENA) are known for many things-- its rich oil resources, unique cultures, religious significance 
                             for Abrahamic religions, and its seemingly constant tumult. In recent years, headlines reporting on the region have concentrated on the war and violence that 
                             has plagued the region. If one were to merely go by headlines, it would be easy to believe that the Middle East and North Africa
-                            is more unstable than other regions, but is that true? How does the Middle East and North Africa compare to the rest of the world when it comes to destablizing
+                            is the most unstable region in the world, but is that true? While this is a big question, one of the ways that one can begin to answer it
+                            is by looking at governance, in particular coup d'etats. How does the Middle East and North Africa compare to the rest of the world when it comes to destablizing
                             activities such as coup d'etats?"),
                           p("Britannica defines a coup d'etat as 'the sudden, violent overthrow of an existing government by a small group'. In this project, I use the Coup 
                             d'etat data set compiled by the Cline Center for Advanced Social Research at the University of Illinois, Urabana-Champaign. The data is comprised of
@@ -37,7 +39,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             A realized (ie. succesful) event results in the incumbent's loss of power. Unrealized events include conspiracies and attempted coups,
                             which do not remove the targeted incumbent. A conspiracy is defined as a plot to execute a coup that is discovered and thwarted before 
                             it can be initiated. An attempted coup is an event when a coup plan is initiated but fails to achieve its goal. There are also a variety
-                            of methods and groups that initiate a coup event. The CLine Center's set includes the following : military coups, auto coups, palace coups, 
+                            of methods and groups that initiate a coup event. The Cline Center's set includes the following : military coups, auto coups, palace coups, 
                             popular revolt coups, dissident coups,rebel coups, foreign-backed, counter coups, and other coups that do not fit other types."),
                           p("Looking through all of the data, it quickly became clear that since 1949, countries in South America has seen the most successful coups."),
                             sidebarLayout(
@@ -47,12 +49,16 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   "Plot Type",
                                   c("Top 10 Successful Coups" = "a", "Top 10 Unsuccessful Coup Events" = "b")
                                 )),
-                              mainPanel(plotOutput("plots")))
+                              mainPanel(plotOutput("plots"))),
+                          p("You can find an experts take on instability in the MENA Through this link:"),
+                          a("Stability in the Middle East: The Range of Short and Long-Term Causes ,", 
+                            href = 
+                              "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes")
                           )),
                  tabPanel("Maps",
                           fluidPage(
-                          titlePanel("Mapping Event Types"),
-                          p("This page includes interactive density maps that show how common each of these event types are all over the world."),
+                          titlePanel("Mapping Occurances"),
+                          p("Hover over the countries in these interactive density maps to see how many coup events have occured in each country."),
                                         mainPanel(
                                                   highchartOutput("map_1", height = '500px'),
                                                   highchartOutput("map_2", height = '500px'),
@@ -66,10 +72,10 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             categorized each country in the set by either 'TRUE' meaning within the Middle East or 'FALSE' located somewhere 
                             else in the world. I then created a regression model that captured the interactions between the MENA parameter and 
                             the selected coup types."),
-                              gt_output("Table_1"),
-                             p("These plots show that for the most part, these coup types do not have a higher rate of success in MENA countries
+                            gt_output("Table_1"),
+                            p("These plots show that for the most part, these coup types do not have a higher rate of success in MENA countries
                              in comparison to the rest of the world."),
-                             mainPanel(        
+                                      mainPanel(        
                                                 plotOutput("mena_plots")))),
                  tabPanel("About", 
                           titlePanel("About"),
@@ -80,7 +86,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           fill Western media which often frame the Middle East as a region of constant instability. While the region has dealt with many wars
                           and conflicts, I know that there had to be more to these stories. I settled on this coup data set as coup events (coups, conspiracies,
                           and attempts all have the potential to destabilize key structures of governance in any society.)
-                            You can reach me at nanakorantema_koranteng@g.harvard.edu.")))
+                          You can reach me at nanakorantema_koranteng@g.harvard.edu."),
+                          h2("Bibliography"),
+                          p("Peyton, Buddy, Joseph Bajjalieh, Dan Shalmon, Michael Martin, and Jonathan Bonaguro. 2020. Cline Center Coup D’état Project Dataset. 
+                          Cline Center for Advanced Social Research. V.2.0.0. November 16. University of Illinois Urbana-Champaign. doi: 10.13012/B2IDB-9651987_V"),
+                          p("Check out my github repository to see how my shiny app works!", 
+                            href = "https://github.com/nanakorantema/Final_Project")))
 
 
 
