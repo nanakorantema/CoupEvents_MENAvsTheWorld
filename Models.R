@@ -4,6 +4,7 @@ library(gtsummary)
 library(Rcpp)
 library(gt)
 library(broom.mixed)
+library(rstanarm)
 library(ggdist)
 library(patchwork)
 
@@ -18,9 +19,13 @@ library(patchwork)
 fit_1 <- readRDS("Coup_Data/fit_1.rds")
 
 Table_1 <- tbl_regression(fit_1, 
-                          intercept = TRUE,  exponentiate = TRUE,
+                          intercept = TRUE,
                           estimate_fun = function(x) style_sigfig(x, digits = 4)) %>%
-            as_gt()
+                as_gt() %>% 
+                tab_header(title = md("**Likelihood of Coup Realization**"),
+                           subtitle = "How Coup Type and Location Predict Likelihood of Success") %>%
+                tab_source_note(md("Source: The Cline Center (2021)")) %>% 
+                cols_label(estimate = md("**Parameter**"))
 #render as gt
 
 pe_1 <- readRDS("Coup_Data/pe_1.rds")
