@@ -5,10 +5,10 @@ account: nanakkoranteng
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4016597
-bundleId: 4512508
+bundleId: 4512774
 url: https://nanakkoranteng.shinyapps.io/CoupEvents/
-when: 1619236293.95028
-lastSyncTime: 1619236293.95029
+when: 1619244228.52653
+lastSyncTime: 1619244228.52655
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: README.md|Initial-Information_files
+ignoredFiles: mena_plots.png|README.md
