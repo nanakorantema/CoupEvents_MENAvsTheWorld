@@ -18,7 +18,7 @@ library(tidybayes)
 ```
 
 ```{r intial data entryy} 
-coup_data <- read_csv(file = "Coup_Data_v2.0.0.csv", col_types = cols(
+coup_data <- read_csv(file = "../Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
   .default = col_double(),
   coup_id = col_character(),
   country = col_character(),
@@ -178,5 +178,24 @@ theconspiracyMap <- mapCountryData( joined_data,
 
 ```
 
+```{r}
+      plot_3  <- Clean_coup %>% 
+                  group_by(year) %>% 
+                  filter(realized == 1) %>% 
+                  ggplot(aes(x = year)) +
+                  geom_histogram(fill = "darkolivegreen4",
+                                 bins = 75,
+                                 binwidth = .5) +
+                  labs(title = "Coup Occurences from 1949 - 2019",
+                       subtitle = "Coup occurrences peaked in the late 70- early '80s",
+                       caption = "Source: Cline Center Coup D’état Project Dataset",
+                       x = "Country",
+                       y = "Number of Successful Coups") +
+                  theme_minimal()
+
+year_plot
+
+
+```
 
 

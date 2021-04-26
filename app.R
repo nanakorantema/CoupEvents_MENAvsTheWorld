@@ -46,7 +46,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 selectInput(
                                   "plot_type",
                                   "Plot Type",
-                                  c("Top 10 Successful Coups" = "a", "Top 10 Unsuccessful Coup Events" = "b")
+                                  c("Top 10 Successful Coups" = "a", "Top 10 Unsuccessful Coup Events" = "b", "Coup Occurrences from 1949 - 2019" = "c")
                                         )),
                                     mainPanel(plotOutput("plots"))),
                             p("You can find an experts take on instability in the MENA Through this link:"),
@@ -100,7 +100,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           and conflicts, I know that there had to be more to these stories. I settled on this coup data set as coup events (coups, conspiracies,
                           and attempts all have the potential to destabilize key structures of governance in any society.)
                           You can reach me at nanakorantema_koranteng@g.harvard.edu."),
-                        h2("Bibliography"),
+                        h2("Data Set"),
                           p("Peyton, Buddy, Joseph Bajjalieh, Dan Shalmon, Michael Martin, and Jonathan Bonaguro. 2020. Cline Center Coup D’état Project Dataset. 
                           Cline Center for Advanced Social Research. V.2.0.0. November 16. University of Illinois Urbana-Champaign. doi: 10.13012/B2IDB-9651987_V"),
                             a("Check out my github repository to see how my shiny app works!", 
@@ -117,7 +117,10 @@ output$plots <- renderPlot({
             plot_1
         }                                        
         else if(input$plot_type == "b"){
-            plot_2
+                plot_2
+        }
+        else if(input$plot_type == "c"){
+                plot_3
         }
     })
     
