@@ -6,7 +6,7 @@ library(gt)
 library(broom.mixed)
 library(rstanarm)
 library(ggdist)
-library(patchwork)
+
 
 
 #I have selected these variables because they represent the top 4 most common
@@ -29,71 +29,20 @@ Table_1 <- tbl_regression(fit_1,
 #render as gt
 
 pe_1 <- readRDS("Coup_Data/pe_1.rds")
-#information for posterior_epred
+#information for posterior_epred, I created a new variable that is a combination
+#of popular and foreign backed coups
 
-palace_pe <- pe_1 %>% 
-                filter(palace == 1,
-                       popular == 0,
-                       military == 0,
-                       foreign == 0) %>% 
-                ggplot(aes(x = .value, y = as.character(palace), fill = mena)) +
-                stat_slab(alpha =.5) +
-                labs(x = "Probability of Realization",
-                     y = "Palace Coup",
-                     fill = "MENA") +
-                theme(legend.title = element_text(face = "bold")) +
-                scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-                theme_tidybayes() 
-
-popular_pe <- pe_1 %>% 
-                filter(palace == 0,
-                       popular %in% 1,
-                       military == 0,
-                       foreign == 0) %>% 
-                ggplot(aes(x = .value, y = as.character(popular == 1), fill = mena)) +
-                stat_slab(alpha =.5) +
-                labs(x = "Probability of Realization",
-                     y = "Popular Coup",
-                     fill = "MENA") +
-                scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-                theme(legend.title = element_text(face = "bold")) +
-                theme_tidybayes()
-
-foreign_pe <- pe_1 %>% 
-                filter(palace == 0,
-                       popular == 0,
-                       military == 0,
-                       foreign == 1) %>% 
-                ggplot(aes(x = .value, y = as.character(foreign == 1), fill = mena)) +
-                stat_slab(alpha =.5) +
-                labs(x = "Probability of Realization",
-                     y = "Foreign Backed Coup",
-                     fill = "MENA") +
-                theme(legend.title = element_text(face = "bold")) +
-                scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-                theme_tidybayes()
-
-military_pe <- pe_1 %>% 
-                filter(palace == 0,
-                       popular == 0,
-                       military == 1,
-                       foreign == 0) %>% 
-  ggplot(aes(x = .value, y = as.character(military == 1), fill = mena)) +
-  labs(x = "Probability of Realization",
-       y = "Military Coup",
+coup_plot <- pe_1 %>% 
+  filter(military == 0,
+         palace == 0) %>% 
+  ggplot(aes(x = .value, y = as.character(pop_for), fill = mena)) +
+  stat_slab(alpha =.5) +
+  labs(title = "Posterior Probability Distributions of Palace and Foreign Backed Coups",
+       subtitle = "The probability of a coup succeeding increases with popular resistance",
+       x = "Probability of Success",
+       y = "Popular and Foriegn Backed Coup Combinations",
        fill = "MENA") +
   theme(legend.title = element_text(face = "bold")) +
-  stat_slab(alpha =.5) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-  theme_tidybayes()
-
-
-mena_interaction <- palace_pe + popular_pe + foreign_pe + military_pe
-
-
-mena_plots <- mena_interaction +
-  plot_annotation(title = "Posterior Probability Distribution for Top 4 Coup Types in MENA",
-                  subtitle = "For the most part they are more popular outside of the MENA",
-                  caption = "Source: Hopkins et al (2021)") &
-  coord_cartesian(xlim = c(0,1.0)) 
+  theme_tidybayes() 
 

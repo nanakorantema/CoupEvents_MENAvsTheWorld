@@ -15,7 +15,6 @@ library(Rcpp)
 library(ggdist)
 library(gt)
 library(broom.mixed)
-library(patchwork)
 source("Plots.R")
 source("Models.R")
 
@@ -48,50 +47,63 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   "plot_type",
                                   "Plot Type",
                                   c("Top 10 Successful Coups" = "a", "Top 10 Unsuccessful Coup Events" = "b")
-                                )),
-                              mainPanel(plotOutput("plots"))),
-                          p("You can find an experts take on instability in the MENA Through this link:"),
-                          a("Stability in the Middle East: The Range of Short and Long-Term Causes", 
-                            href = 
-                              "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes")
-                          )),
+                                        )),
+                                    mainPanel(plotOutput("plots"))),
+                            p("You can find an experts take on instability in the MENA Through this link:"),
+                            a("Stability in the Middle East: The Range of Short and Long-Term Causes", 
+                              href = "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes"))),
                  tabPanel("Maps",
-                          fluidPage(
-                          titlePanel("Mapping Occurances"),
-                          p("Hover over the countries in these interactive density maps to see how many coup events have occured in each country."),
-                                        mainPanel(
-                                                  highchartOutput("map_1", height = '500px'),
-                                                  highchartOutput("map_2", height = '500px'),
-                                                  highchartOutput("map_3", height = '500px')))),
+                  fluidPage(
+                            titlePanel("Mapping Occurances"),
+                              p("Hover over the countries in these interactive density maps to see how many coup events have occured in each country."),
+                                mainPanel(
+                                          highchartOutput("map_1", height = '500px'),
+                                          highchartOutput("map_2", height = '500px'),
+                                          highchartOutput("map_3", height = '500px')))),
                  tabPanel("Coup Analysis",
-                          fluidPage(
-                          titlePanel("Coup Events Analysis"),
-                          h3("Comparing the Probabilities of the Success of Specific Coup Types in the MENA vs. The Rest of the World "),
-                            p("As the last component of my project I sought to compare the probability of the 4 most popular coup types in
-                            the Middle East in comparison to the rest of the world. To do this, I created a MENA variable in the data which
-                            categorized each country in the set by either 'TRUE' meaning within the Middle East or 'FALSE' located somewhere 
-                            else in the world. I then created a regression model that captured the interactions between the MENA parameter and 
-                            the selected coup types."),
-                            gt_output("Table_1"),
-                            p("These plots show that for the most part, these coup types do not have a higher rate of success in MENA countries
-                             in comparison to the rest of the world."),
-                                      mainPanel(        
-                                                plotOutput("mena_plots")))),
+                    fluidPage(
+                              titlePanel("Coup Events Analysis"),
+                                  h3("Comparing the Probabilities of the Success of Combinations in the MENA vs. The Rest of the World "),
+                                    p("As the last component of my project I sought to focus on the 4 most popular coup types in
+                                       the Middle East. To do this, I created a MENA variable in the data which categorized each country in 
+                                       the set by either 'TRUE' meaning within the Middle East or 'FALSE' located somewhere else in the world.
+                                       I then created a posterior distribution which includes estimated values of success 
+                                       for various combinations for the 4 coup types while taking into account their location (MENA/Non-MENA). 
+                                       To make things interesting, I created another variable comparing popular and foreign backed coups, 
+                                       which the posterior distribution provided estimated values for."),
+                                       p("The graph below represents a scenario where neither a military nor palace coup have occured.
+                                         Each line then shows the predictated probabilities of coup success for different combinations.
+                                         This model predicts that the lowest probability of coup success occurs when none of the coups in this 
+                                         predictive model occurs. The probability of success outside of the Middle East is lower, between 26% - 30%
+                                         while in the MENA it is anywhere between 30% - 50%. In comparing the spread of the two distributions
+                                         (MENA/Non-MENA), we can be more sure of the probability prediction outside of the MENA in comparison 
+                                         to within the region. Most interesting, the probability of coup success is always greater both in
+                                         and outside the MENA when it is backed by popular resistance. According to this graph, the most 
+                                         successful coup scenario in the MENA is one based in popular resistance, with a probability between 
+                                         90% -100% success. While this is merely one model, this does seem to support the power of popular resistance."),
+              
+                                                plotOutput("coup_plot"),
+                                  h3("Regression Table and Data Generating Model"),
+                                    gt_output("Table_1"),
+                                    p("I then created a regression model that captured the interactions between the MENA 
+                                    parameter and 
+                                    the selected coup types.")
+                                              )),
                  tabPanel("About", 
-                          titlePanel("About"),
-                          h1("Project Background and Motivations"),
-                          h3("About Me"),
-                          p("My name is Nana-Korantema Koranteng and I am a second year AM candidate in Regional Studies - Middle East at Harvard University.
+                  titlePanel("About"),
+                     h1("Project Background and Motivations"),
+                      h3("About Me"),
+                       p("My name is Nana-Korantema Koranteng and I am a second year AM candidate in Regional Studies - Middle East at Harvard University.
                           I am interested in conflict, gender, and political developments in the region. This project was inspired by the frequent claims that
                           fill Western media which often frame the Middle East as a region of constant instability. While the region has dealt with many wars
                           and conflicts, I know that there had to be more to these stories. I settled on this coup data set as coup events (coups, conspiracies,
                           and attempts all have the potential to destabilize key structures of governance in any society.)
                           You can reach me at nanakorantema_koranteng@g.harvard.edu."),
-                          h2("Bibliography"),
+                        h2("Bibliography"),
                           p("Peyton, Buddy, Joseph Bajjalieh, Dan Shalmon, Michael Martin, and Jonathan Bonaguro. 2020. Cline Center Coup D’état Project Dataset. 
                           Cline Center for Advanced Social Research. V.2.0.0. November 16. University of Illinois Urbana-Champaign. doi: 10.13012/B2IDB-9651987_V"),
-                          a("Check out my github repository to see how my shiny app works!", 
-                            href = "https://github.com/nanakorantema/Final_Project")))
+                            a("Check out my github repository to see how my shiny app works!", 
+                             href = "https://github.com/nanakorantema/Final_Project")))
 
 
 
@@ -135,9 +147,9 @@ output$Table_1 <-  render_gt({
                               
   })
 
-output$mena_plots <- renderPlot({
+output$coup_plot <- renderPlot({
   
-mena_plots
+coup_plot
 
 })
 }

@@ -16,9 +16,19 @@ library(ggdist)
 library(patchwork)
 ```
 
+
+```{r}
+x <- read_csv(file = "../Coup_Data/Coup_Data_v2.0.0.csv")
+```
+
+
+
+
+
+
 ```{r intial data}
 
-coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
+coup_data <- read_csv(file = "../Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
   .default = col_double(),
   coup_id = col_character(),
   country = col_character(),
@@ -58,7 +68,7 @@ model_data <- coup_data %>%
 #the Middle East and seek to explore its interaction with the coup types to
 #determine if they have as significant causal effect.
 
-fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + mena - 1 + mena*popular + mena*military +  mena*foreign + mena*palace,
+fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + mena + mena*popular + mena*military +  mena*foreign + mena*palace,
                   #add interaction terms? -> military, middle east, event_type, military*middle east?
                   family = "binomial",
                   model_data,
@@ -66,7 +76,7 @@ fit_1 <- stan_glm(realized ~ popular + military + foreign + palace + mena - 1 + 
                   seed = 13)
 
 
-#saveRDS(fit_1, file = "fit_1.rds")
+saveRDS(fit_1, file = "fit_1.rds")
 
 
 #Middle_east* interaction with other variables- interaction between two terms that matter - one model that captures the complete reality 
@@ -91,6 +101,7 @@ Table_1
 
 gtsave(Table_1,"Table_1.png")
 
+# being in the Middle East doesn't matter
 
 ```
 
@@ -99,8 +110,6 @@ $realized_{i} =  \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_
 #import knitted r markdown (google how)
 
 ```{r,  warning=FALSE}
-
-
 popular <- unique(model_data$popular)
 military <- unique(model_data$military)
 foreign <- unique(model_data$foreign)
@@ -110,26 +119,27 @@ mena <- unique(model_data$mena)
 newobs_1 <- expand_grid(popular, military, foreign, palace, mena) 
 
 pe_1 <- add_fitted_draws(newobs_1, fit_1) %>% 
-      as_tibble()
+      as_tibble() %>% 
+      mutate(pop_for = paste(popular, foreign, sep = "-"))
 
 #saveRDS(pe_1, "pe_1.rds")
 
 
-palace_pe <- pe_1 %>% 
-              filter(palace == 1,
-                     popular == 0,
-                     military == 0,
-                     foreign == 0) %>% 
-              ggplot(aes(x = .value, y = as.character(palace), fill = mena)) +
+coup_plot <- pe_1 %>% 
+              filter(military == 0,
+                     palace == 0) %>% 
+              ggplot(aes(x = .value, y = as.character(pop_for), fill = mena)) +
               stat_slab(alpha =.5) +
-              labs(x = "Probability of Realization",
-                   y = "Palace Coup",
+              labs(title = "Posterior Probability Distributions of Palace and Foreign Backed Coups",
+                   subtitle = "The probability of a coup succeeding increases with popular resistance",
+                   x = "Probability of Success",
+                   y = "Popular and Foriegn Backed Coup Combinations",
                    fill = "MENA") +
               theme(legend.title = element_text(face = "bold")) +
               scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
               theme_tidybayes() 
-palace_pe
 
+coup_plot
 ```
 
 ```{r pe_2}
