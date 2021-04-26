@@ -59,7 +59,7 @@ plot_2 <- attempted_coups %>%
             theme_minimal() +
             geom_col(fill = "darkolivegreen4")
 
-readRDS("Coup_Data/clean_coup_data.rds")
+Clean_coup <- readRDS("Coup_Data/clean_coup_data.rds")
 
 plot_3  <- Clean_coup %>% 
             group_by(year) %>% 
@@ -80,8 +80,6 @@ plot_3  <- Clean_coup %>%
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv")
 
 #I cleaned the data a bit in preparation for creating these maps
-
-readRDS("Coup_Data/clean_coup_data.rds")
 
 
 # In order to use highcharter to create my maps, I needed to join a a specific
