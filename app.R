@@ -69,15 +69,16 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                        the set by either 'TRUE' meaning within the Middle East or 'FALSE' located somewhere else in the world.
                                        I then created a posterior distribution which includes estimated values of success 
                                        for various combinations for the 4 coup types while taking into account their location (MENA/Non-MENA). 
-                                       To make things interesting, I created another variable comparing popular and foreign backed coups, 
-                                       which the posterior distribution provided estimated values for."),
+                                       To make things interesting, I created another variable combining popular and foreign backed coups, 
+                                       which was included in the posterior distribution provided estimated values."),
                                        p("The graph below represents a scenario where neither a military nor palace coup have occured.
                                          Each line then shows the predictated probabilities of coup success for different combinations.
-                                         This model predicts that the lowest probability of coup success occurs when none of the coups in this 
-                                         predictive model occurs. The probability of success outside of the Middle East is lower, between 26% - 30%
-                                         while in the MENA it is anywhere between 30% - 50%. In comparing the spread of the two distributions
-                                         (MENA/Non-MENA), we can be more sure of the probability prediction outside of the MENA in comparison 
-                                         to within the region. Most interesting, the probability of coup success is always greater both in
+                                         This model predicts that foreign backed coups have the lowest probability of success in the MENA 
+                                         when no other coup type within this predictive model occurs. Foreign backed coups are predicted
+                                         to have about a 5% - 20% probability of success. Due to the spread of the distribution, we can be
+                                         less certain about the exact value. Coups that do not fit the types explored in this model are least 
+                                         probable to succeed outside of the MENA with a probability of success between 26% - 30%.
+                                         Most interesting, the probability of coup success is always greater both in
                                          and outside the MENA when it is backed by popular resistance. According to this graph, the most 
                                          successful coup scenario in the MENA is one based in popular resistance, with a probability between 
                                          90% -100% success. While this is merely one model, this does seem to support the power of popular resistance."),
@@ -85,9 +86,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                 plotOutput("coup_plot"),
                                   h3("Regression Table and Data Generating Model"),
                                     gt_output("Table_1"),
-                                    p("I then created a regression model that captured the interactions between the MENA 
-                                    parameter and 
-                                    the selected coup types.")
+                                    p(" The above model is based on the linear regression model below. This table shows that being located outside the 
+                                    MENA has a positive impact on coup success. It is possible that the fact that the MENA has a smaller sample size may 
+                                    impact the results of the model.")
                                               )),
                  tabPanel("About", 
                   titlePanel("About"),
