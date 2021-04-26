@@ -54,7 +54,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               href = "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes"))),
                  tabPanel("Maps",
                   fluidPage(
-                            titlePanel("Mapping Occurances"),
+                            titlePanel("Mapping Coup Events"),
                               p("Hover over the countries in these interactive density maps to see how many coup events have occured in each country."),
                                 mainPanel(
                                           highchartOutput("map_1", height = '500px'),
