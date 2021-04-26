@@ -24,9 +24,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  "Coups Events and How the Middle East Compares to the Rest of the World",
                  tabPanel("Introduction", 
                           fluidPage(
-                          titlePanel("Introduction"),
-                          h3("Understandging Coups"),
-                            p(" The Middle East and North Africa (MENA) are known for many things-- its rich oil resources, unique cultures, religious significance 
+                          h3("Understanding Coups"),
+                            p("The Middle East and North Africa (MENA) are known for many things-- its rich oil resources, unique cultures, religious significance 
                             for Abrahamic religions, and its seemingly constant tumult. In recent years, headlines reporting on the region have concentrated on the war and violence that 
                             has plagued the region. If one were to merely go by headlines, it would be easy to believe that the Middle East and North Africa
                             is the most unstable region in the world, but is that true? While this is a big question, one of the ways that one can begin to answer it
@@ -39,7 +38,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             which do not remove the targeted incumbent. A conspiracy is defined as a plot to execute a coup that is discovered and thwarted before 
                             it can be initiated. An attempted coup is an event when a coup plan is initiated but fails to achieve its goal. There are also a variety
                             of methods and groups that initiate a coup event. The Cline Center's set includes the following : military coups, auto coups, palace coups, 
-                            popular revolt coups, dissident coups,rebel coups, foreign-backed, counter coups, and other coups that do not fit other types."),
+                            popular revolt coups, dissident coups,rebel coups, foreign-backed, counter coups, and other coups that did not fit into any category."),
                           p("Looking through all of the data, it quickly became clear that since 1949, countries in South America has seen the most successful coups."),
                             sidebarLayout(
                               sidebarPanel(
