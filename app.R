@@ -25,7 +25,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  tabPanel("Introduction", 
                           fluidPage(
                           h3("Understanding Coups"),
-                            p("The Middle East and North Africa (MENA) are known for many things-- its rich oil resources, unique cultures, religious significance 
+                            p("The Middle East and North Africa (MENA) region is known for many things-- its rich oil resources, unique cultures, religious significance 
                             for Abrahamic religions, and its seemingly constant tumult. In recent years, headlines reporting on the region have concentrated on the war and violence that 
                             has plagued the region. If one were to merely go by headlines, it would be easy to believe that the Middle East and North Africa
                             is the most unstable region in the world, but is that true? While this is a big question, one of the ways that one can begin to answer it
