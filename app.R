@@ -72,7 +72,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   Coup Occurrences from 1949 - 2019" = "c")
                                               )),
                                   mainPanel(plotOutput("plots"))),
-                        p("You can find an experts take on instability in
+                        p("You can find an expert's take on instability in
                           the MENA Through this link:"),
                           a("Stability in the Middle East:
                             The Range of Short and Long-Term Causes", 
