@@ -59,7 +59,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                         dissident coups, rebel coups, foreign-backed coups, 
                         counter-coups, and other coups that did not fit into any 
                         category."),
-                        p("Looking through all of the data, it quickly became clear that since 1949, countries in South America has seen the most successful coups."),
+                        p("Looking through all of the data, it quickly became 
+                          clear that since 1949, countries in South America has
+                          seen the most successful coups."),
                           sidebarLayout(
                             sidebarPanel(
                               selectInput(
