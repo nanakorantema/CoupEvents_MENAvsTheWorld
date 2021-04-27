@@ -21,7 +21,7 @@ source("Models.R")
 
 # Define UI for application 
 ui <- navbarPage(theme = shinytheme("lumen"),
-                 "Coups Events and How the Middle East Compares to the Rest of the World",
+      "Coups Events and How the Middle East Compares to the Rest of the World",
                  tabPanel("Introduction", 
                             fluidPage(
                               h3("Understanding Coups"),
