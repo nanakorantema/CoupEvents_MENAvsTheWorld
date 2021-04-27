@@ -3,7 +3,7 @@ library(tidyverse)
 library(ggplot2)
 library(shinythemes)
 library(highcharter)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 library(maps)
 library(ggplot2)
 library(janitor)
@@ -23,35 +23,35 @@ source("Models.R")
 ui <- navbarPage(theme = shinytheme("lumen"),
                  "Coups Events and How the Middle East Compares to the Rest of the World",
                  tabPanel("Introduction", 
-                          fluidPage(
-                          h3("Understanding Coups"),
-                            p("The Middle East and North Africa (MENA) region is known for many things-- its rich oil resources, unique cultures, religious significance 
-                            for Abrahamic religions, and its seemingly constant tumult. In recent years, headlines reporting on the region have concentrated on the war and violence that 
-                            has plagued the region. If one were to merely go by headlines, it would be easy to believe that the Middle East and North Africa
-                            is the most unstable region in the world, but is that true? While this is a big question, one of the ways that one can begin to answer it
-                            is by looking at governance, in particular coup d'etats. How does the Middle East and North Africa compare to the rest of the world when it comes to destablizing
-                            activities such as coup d'etats?"),
-                          p("Britannica defines a coup d'etat as 'the sudden, violent overthrow of an existing government by a small group'. In this project, I use the Coup 
-                            d'etat data set compiled by the Cline Center for Advanced Social Research at the University of Illinois, Urabana-Champaign. The data is comprised of
-                            943 coup events, including 426 realized coups, 336 attempted coups, and 181 coup conspiracies that occurred globally between 1945 and 2019.
-                            A realized (ie. succesful) event results in the incumbent's loss of power. Unrealized events include conspiracies and attempted coups,
-                            which do not remove the targeted incumbent. A conspiracy is defined as a plot to execute a coup that is discovered and thwarted before 
-                            it can be initiated. An attempted coup is an event when a coup plan is initiated but fails to achieve its goal. There are also a variety
-                            of methods and groups that initiate a coup event. The Cline Center's set includes the following : military coups, auto coups, palace coups, 
-                            popular revolt coups, dissident coups,rebel coups, foreign-backed, counter coups, and other coups that did not fit into any category."),
-                          p("Looking through all of the data, it quickly became clear that since 1949, countries in South America has seen the most successful coups."),
-                            sidebarLayout(
-                              sidebarPanel(
-                                selectInput(
-                                  "plot_type",
-                                  "Plot Type",
-                                  c("Top 10 Successful Coups" = "a", "Top 10 Unsuccessful Coup Events" = "b", "Coup Occurrences from 1949 - 2019" = "c")
-                                        )),
-                                    mainPanel(plotOutput("plots"))),
-                            p("You can find an experts take on instability in the MENA Through this link:"),
-                            a("Stability in the Middle East: The Range of Short and Long-Term Causes", 
-                              href = "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes"))),
-                 tabPanel("Maps",
+                            fluidPage(
+                              h3("Understanding Coups"),
+                                  p("The Middle East and North Africa (MENA) region is known for many things-- its rich oil resources, unique cultures, religious significance 
+                                  for Abrahamic religions, and its seemingly constant tumult. In recent years, headlines reporting on the region have concentrated on the war and violence that 
+                                  has plagued the region. If one were to merely go by headlines, it would be easy to believe that the Middle East and North Africa
+                                  is the most unstable region in the world, but is that true? While this is a big question, one of the ways that one can begin to answer it
+                                  is by looking at governance, in particular coup d'etats. How does the Middle East and North Africa compare to the rest of the world when it comes to destablizing
+                                  activities such as coup d'etats?"),
+                                p("Britannica defines a coup d'etat as 'the sudden, violent overthrow of an existing government by a small group'. In this project, I use the Coup 
+                                  d'etat data set compiled by the Cline Center for Advanced Social Research at the University of Illinois, Urabana-Champaign. The data is comprised of
+                                  943 coup events, including 426 realized coups, 336 attempted coups, and 181 coup conspiracies that occurred globally between 1945 and 2019.
+                                  A realized (ie. succesful) event results in the incumbent's loss of power. Unrealized events include conspiracies and attempted coups,
+                                  which do not remove the targeted incumbent. A conspiracy is defined as a plot to execute a coup that is discovered and thwarted before 
+                                  it can be initiated. An attempted coup is an event when a coup plan is initiated but fails to achieve its goal. There are also a variety
+                                  of methods and groups that initiate a coup event. The Cline Center's set includes the following : military coups, auto coups, palace coups, 
+                                  popular revolt coups, dissident coups,rebel coups, foreign-backed, counter coups, and other coups that did not fit into any category."),
+                                p("Looking through all of the data, it quickly became clear that since 1949, countries in South America has seen the most successful coups."),
+                                  sidebarLayout(
+                                    sidebarPanel(
+                                      selectInput(
+                                        "plot_type",
+                                        "Plot Type",
+                                        c("Top 10 Successful Coups" = "a", "Top 10 Unsuccessful Coup Events" = "b", "Coup Occurrences from 1949 - 2019" = "c")
+                                              )),
+                                          mainPanel(plotOutput("plots"))),
+                                  p("You can find an experts take on instability in the MENA Through this link:"),
+                                    a("Stability in the Middle East: The Range of Short and Long-Term Causes", 
+                                      href = "https://www.csis.org/analysis/stability-middle-east-range-short-and-long-term-causes"))),
+                   tabPanel("Maps",
                   fluidPage(
                             titlePanel("Mapping Coup Events"),
                               p("Hover over the countries in these interactive density maps to see how many coup events have occured in each country."),
@@ -70,24 +70,27 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                        for various combinations for the 4 coup types while taking into account their location (MENA/Non-MENA). 
                                        To make things interesting, I created another variable combining popular and foreign backed coups, 
                                        which was included in the posterior distribution provided estimated values."),
-                                       p("The graph below represents a scenario where neither a military nor palace coup have occured.
-                                         Each line then shows the predictated probabilities of coup success for different combinations.
-                                         This model predicts that foreign backed coups have the lowest probability of success in the MENA 
-                                         when no other coup type within this predictive model occurs. Foreign backed coups are predicted
-                                         to have about a 5% - 20% probability of success. Due to the spread of the distribution, we can be
-                                         less certain about the exact value. Coups that do not fit the types explored in this model are least 
-                                         probable to succeed outside of the MENA with a probability of success between 26% - 30%.
-                                         Most interesting, the probability of coup success is always greater both in
-                                         and outside the MENA when it is backed by popular resistance. According to this graph, the most 
-                                         successful coup scenario in the MENA is one based in popular resistance, with a probability between 
-                                         90% -100% success. While this is merely one model, this does seem to support the power of popular resistance."),
+                                     p("The graph below represents a scenario where neither a military nor palace coup have occured.
+                                        Each line then shows the predictated probabilities of coup success for different combinations.
+                                        This model predicts that foreign backed coups have the lowest probability of success in the MENA 
+                                        when no other coup type within this predictive model occurs. Foreign backed coups are predicted
+                                        to have about a 5% - 20% probability of success. Due to the spread of the distribution, we can be
+                                        less certain about the exact value. Coups that do not fit the types explored in this model are least 
+                                        probable to succeed outside of the MENA with a probability of success between 26% - 30%.
+                                        Most interesting, the probability of coup success is always greater both in
+                                        and outside the MENA when it is backed by popular resistance. According to this graph, the most 
+                                        successful coup scenario in the MENA is one based in popular resistance, with a probability between 
+                                        90% -100% success. While this is merely one model, this does seem to support the power of popular resistance."),
               
                                                 plotOutput("coup_plot"),
                                   h3("Regression Table and Data Generating Model"),
-                                    gt_output("Table_1"),
-                                    p(" The above model is based on the linear regression model below. This table shows that being located outside the 
+                                  h4("Data Generating Model"),
+                                  p("This is the mathematical expression representing the linear regression below"),
+                                    uiOutput('ex1'),
+                                  p("The model below is based on the linear regression model below. This table shows that being located outside the 
                                     MENA has a positive impact on coup success. It is possible that the fact that the MENA has a smaller sample size may 
-                                    impact the results of the model.")
+                                    impact the results of the model."),
+                                      fluidPage(uiOutput("equation1"))
                                               )),
                  tabPanel("About", 
                   titlePanel("About"),
@@ -143,6 +146,19 @@ map_3
             
     })
 
+# I had a lot of trouble getting the equation to show properly, so I looked at 
+#another student's project and copied her formatting
+
+output$equation1 <- renderUI({
+  withMathJax(helpText('$$ realized_i =  \\beta_1 popular_{i}
+                        + \\beta_2 military_{i} + \\beta_3 foreign_{i} 
+                        + \\beta_4 palace_{i} + \\beta_5 menaTRUE_{i} 
+                        + \\beta_6 popular*menaTRUE_{i}
+                        + \\beta_7 military*menaTRUE_{i} + \\beta_8 foreign*menaTRUE_{i} 
+                        + \\beta_9 palace*menaTRUE_{i} + \\epsilon_{i} $$'))
+  
+})
+  
 output$Table_1 <-  render_gt({
 
   Table_1

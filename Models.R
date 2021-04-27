@@ -46,3 +46,6 @@ coup_plot <- pe_1 %>%
   scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
   theme_tidybayes() 
 
+
+
+

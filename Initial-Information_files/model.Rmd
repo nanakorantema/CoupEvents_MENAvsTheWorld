@@ -106,7 +106,7 @@ gtsave(Table_1,"Table_1.png")
 ```
 
 
-$realized_{i} =  \beta_1 popular_{i} + \beta_2 dissident_{i} +  \beta_3 foreign_{i} + \beta_4 military + \beta_5 rebel + \beta_6 palace_{i} + \beta_7 auto + \epsilon_{i}$ 
+$realized_{i} =  \beta_1 popular_{i} + \beta_2 military_{i} +  \beta_3 foreign_{i} + \beta_4 palace_{i} + \beta_5 menaTRUE_{i} + \beta_6 popular*menaTRUE_{i} + \beta_7 military*menaTRUE_{i}  + \beta_8 foreign*menaTRUE_{i} +  \beta_9 palace*menaTRUE_{i} + \epsilon_{i}$ 
 #import knitted r markdown (google how)
 
 ```{r,  warning=FALSE}
