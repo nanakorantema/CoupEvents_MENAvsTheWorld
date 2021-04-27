@@ -86,11 +86,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   h3("Regression Table and Data Generating Model"),
                                   h4("Data Generating Model"),
                                   p("This is the mathematical expression representing the linear regression below"),
-                                    uiOutput('ex1'),
+                                    fluidPage(uiOutput("equation1")), 
                                   p("The model below is based on the linear regression model below. This table shows that being located outside the 
                                     MENA has a positive impact on coup success. It is possible that the fact that the MENA has a smaller sample size may 
                                     impact the results of the model."),
-                                      fluidPage(uiOutput("equation1"))
+                                    gt_output("Table_1")
                                               )),
                  tabPanel("About", 
                   titlePanel("About"),
@@ -126,7 +126,8 @@ output$plots <- renderPlot({
         }
     })
     
-  
+#my interactive maps
+
 output$map_1 <- renderHighchart({
   
  map_1  
