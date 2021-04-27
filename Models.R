@@ -37,7 +37,7 @@ coup_plot <- pe_1 %>%
          palace == 0) %>% 
   ggplot(aes(x = .value, y = as.character(pop_for), fill = mena)) +
   stat_slab(alpha =.5) +
-  labs(title = "Posterior Probability Distributions of Palace and Foreign Backed Coups",
+  labs(title = "Posterior Probability Distributions of Popular and Foreign Backed Coups",
        subtitle = "The probability of a coup succeeding increases with popular resistance",
        x = "Probability of Success",
        y = "Popular and Foriegn Backed Coup Combinations",
