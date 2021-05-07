@@ -9,6 +9,7 @@ library(ggplot2)
 library(janitor)
 library(skimr)
 
+# added column types to remove error message
 
 coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
   .default = col_double(),
@@ -18,6 +19,10 @@ coup_data <- read_csv(file = "Coup_Data/Coup_Data_v2.0.0.csv", col_types = cols(
   day = col_character(),
   event_type = col_character()
 ))
+
+# Iremoved variables that were not relevant to creating this plot. I made sure to
+# group by country before summarizing so that I could use it to plot the total
+# occurrences
 
 top_10_coups <- coup_data %>% 
   group_by(country) %>% 
@@ -30,8 +35,10 @@ top_10_coups <- coup_data %>%
 plot_1 <- top_10_coups %>% 
             ggplot(aes(x = fct_reorder(country, total_coup),
                        y = total_coup)) +
-            labs(title = "Top 10 Countries with the Most Successful Coups from 1945- 2019",
-                 subtitle = "South and Central American countries have had the most successful coups",
+            labs(title = "Top 10 Countries with the Most Successful Coups from 
+                 1945- 2019",
+                 subtitle = "South and Central American countries have had the
+                 most successful coups",
                  caption = "Source: Cline Center Coup D’état Project Dataset",
                  x = "Country",
                  y = "Number of Successful Coups") +
@@ -50,14 +57,19 @@ attempted_coups <-coup_data %>%
 plot_2 <- attempted_coups %>% 
             ggplot(aes(x = fct_reorder(country, failed_attempts),
                        y = failed_attempts)) +
-            labs(title = "Top 10 Countries with the Most Unsuccessful Coups from 1945- 2019",
-                 subtitle = "Coups fail all over the world, but especially Central & Latin America",
+            labs(title = "Top 10 Countries with the Most Unsuccessful Coups from
+                 1945- 2019",
+                 subtitle = "Coups fail all over the world, but especially
+                 Central & Latin America",
                  caption = "Source: Cline Center Coup D’état Project Dataset",
                  x = "Country",
                  y = "Number of Unsuccessful Coups") +
             coord_flip() +
             theme_minimal() +
             geom_col(fill = "darkolivegreen4")
+
+# I used the same clean data that I late use for the maps here, mostly because
+# this map was added on after I had completed everything else
 
 Clean_coup <- readRDS("Coup_Data/clean_coup_data.rds")
 

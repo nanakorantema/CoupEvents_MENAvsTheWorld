@@ -38,58 +38,58 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                       East and North African countries compare to the rest of 
                       the world when it comes to destabilizing activities such 
                       as coup d'etats?"),
-                      p("Britannica defines a coup d'etat as 'the sudden,
-                        violent overthrow of an existing government by a small 
-                        group.' In this project, I use the Coup d'etat data set 
-                        compiled by the Cline Center for Advanced Social Research
-                        at the University of Illinois, Urbana-Champaign. 
-                        The data contains 943 coup events, including 426
-                        realized coups, 336 attempted coups, and 181 coup 
-                        conspiracies globally between 1945 and 2019. A realized 
-                        (i.e., successful) event results in the incumbent's loss 
-                        of power. Unrealized events include conspiracies and 
-                        attempted coups, which do not remove the targeted 
-                        incumbent. A conspiracy is a plot to execute a coup that
-                        is discovered and thwarted before it occurs. An 
-                        attempted coup is an event when a coup plan is initiated 
-                        but fails to achieve its goal. There are also a variety 
-                        of methods and groups that initiate a coup event. 
-                        The Cline Center's set includes the following: military 
-                        coups, auto coups, palace coups, popular revolt coups, 
-                        dissident coups, rebel coups, foreign-backed coups, 
-                        counter-coups, and other coups that did not fit into any 
-                        category."),
-                        p("Looking through all of the data, it quickly became 
-                          clear that since 1949, countries in South America has
-                          seen the most successful coups."),
-                          sidebarLayout(
-                            sidebarPanel(
-                              selectInput(
-                                          "plot_type",
-                                          "Plot Type",
-                                c("Top 10 Successful Coups" = "a", 
-                                  "Top 10 Unsuccessful Coup Events" = "b", "
-                                  Coup Occurrences from 1949 - 2019" = "c")
+                    p("Britannica defines a coup d'etat as 'the sudden,
+                      violent overthrow of an existing government by a small 
+                      group.' In this project, I use the Coup d'etat data set 
+                      compiled by the Cline Center for Advanced Social Research
+                      at the University of Illinois, Urbana-Champaign. 
+                      The data contains 943 coup events, including 426
+                      realized coups, 336 attempted coups, and 181 coup 
+                      conspiracies globally between 1945 and 2019. A realized 
+                      (i.e., successful) event results in the incumbent's loss 
+                      of power. Unrealized events include conspiracies and 
+                      attempted coups, which do not remove the targeted 
+                      incumbent. A conspiracy is a plot to execute a coup that
+                      is discovered and thwarted before it occurs. An 
+                      attempted coup is an event when a coup plan is initiated 
+                      but fails to achieve its goal. There are also a variety 
+                      of methods and groups that initiate a coup event. 
+                      The Cline Center's set includes the following: military 
+                      coups, auto coups, palace coups, popular revolt coups, 
+                      dissident coups, rebel coups, foreign-backed coups, 
+                      counter-coups, and other coups that did not fit into any 
+                      category."),
+                    p("Looking through all of the data, it quickly became 
+                      clear that since 1949, countries in South n=and Central
+                      America have seen the most successful coups."),
+                      sidebarLayout(
+                        sidebarPanel(
+                          selectInput(
+                                      "plot_type",
+                                      "Plot Type",
+                            c("Top 10 Successful Coups" = "a", 
+                              "Top 10 Unsuccessful Coup Events" = "b", "
+                              Coup Occurrences from 1949 - 2019" = "c")
                                               )),
-                                  mainPanel(plotOutput("plots"))),
-                        p("You can find an expert's take on instability in
-                          the MENA Through this link:"),
-                          a("Stability in the Middle East:
-                            The Range of Short and Long-Term Causes", 
-                            href = "https://www.csis.org/analysis/stability-
-                            middle-east-range-short-and-long-term-causes"))),
+                              mainPanel(plotOutput("plots"))),
+                    p("You can find an expert's take on instability in
+                      the MENA Through this link:"),
+                      a("Stability in the Middle East:
+                        The Range of Short and Long-Term Causes", 
+                        href = "https://www.csis.org/analysis/stability-
+                        middle-east-range-short-and-long-term-causes"))),
       tabPanel("Maps",
-              fluidPage(titlePanel("Mapping Coup Events"),
-                p("Hover over the countries in these interactive 
-                  density maps to see how many coup events have
-                  occured in each country!"),
-                  mainPanel(
-                            highchartOutput("map_1", height = '500px'),
-                            highchartOutput("map_2", height = '500px'),
-                            highchartOutput("map_3", height = '500px')))),
+        fluidPage(titlePanel("Mapping Coup Events"),
+                  p("Below you will find interactive density maps for the 3 
+                  coup events. When you hover over the countries with your mouse,
+                  you should the number of occurences in each country. "),
+                    mainPanel(
+                              highchartOutput("map_1", height = '500px'),
+                              highchartOutput("map_2", height = '500px'),
+                              highchartOutput("map_3", height = '500px')))),
       tabPanel("Coup Analysis",
-              fluidPage(titlePanel("Coup Events Analysis"),
-                h3("Comparing the Probabilities of the Success
+        fluidPage(titlePanel("Coup Events Analysis"),
+          h3("Comparing the Probabilities of the Success
                     of Combinations in the MENA vs. The Rest of the World "),
                 p("As the last component of my project,
                   I focused on the four most popular coup
@@ -135,19 +135,19 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                   this is merely one model, this does seem
                   to support the power of popular resistance."
                 ),
-                plotOutput("coup_plot"),
-              h3("Regression Table and Data Generating Model"),
-                h4("Data Generating Model"),
-                  p("This is the mathematical expression
-                    representing the linear regression below"),
-                    fluidPage(uiOutput("equation1")),
-                  p("I used the linear regression below as the
-                    basis for my predictive model. This table
-                    shows that being located outside the MENA
-                    has a positive impact on coup success. The
-                    fact that the MENA has a smaller sample
-                    size may impact the results of the model."),
-                    gt_output("Table_1"))), 
+                  plotOutput("coup_plot"),
+            h3("Regression Table and Data Generating Model"),
+              h4("Data Generating Model"),
+                p("This is the mathematical expression
+                  representing the linear regression below"),
+                  fluidPage(uiOutput("equation1")),
+                p("I used the linear regression below as the
+                  basis for my predictive model. This table
+                  shows that being located outside the MENA
+                  has a positive impact on coup success. The
+                  fact that the MENA has a smaller sample
+                  size may impact the results of the model."),
+                  gt_output("Table_1"))), 
       tabPanel("About", 
         titlePanel("About"),
           h1("Project Background and Motivations"),
@@ -178,6 +178,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 
 server <- function(input, output) {
+  #my plots
     
 output$plots <- renderPlot({
         
